@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class DownloaderClient {
-    public static final Log LOG = new Log(Level.FINER)
+    public static final Log LOG = new Log(Level.FINEST)
             .setLogOutput(new SimpleDateFormat("'log/mailclient'yyyy-MM-dd hh-mm-ss'.log'")
                     .format(new Date()));
 

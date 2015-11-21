@@ -26,7 +26,7 @@ public class DownloadTask extends Observable implements Callable<DownloadTask> {
 
     @Override
     public DownloadTask call() throws Exception {
-        DownloaderClient.LOG.fine("Download starting for: " + url.getFile());
+        DownloaderClient.LOG.fine("Download starting for: " + file.getCanonicalPath());
 
         setState(State.INITIALISED);
 
@@ -83,6 +83,7 @@ public class DownloadTask extends Observable implements Callable<DownloadTask> {
                 DownloaderClient.LOG.exception(e);
             }
         }
+        DownloaderClient.LOG.fine("Download finished for: " + file.getCanonicalPath());
         return this;
     }
 

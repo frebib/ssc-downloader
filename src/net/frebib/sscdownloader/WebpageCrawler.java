@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WebpageParser {
+public class WebpageCrawler {
     public static List<URL> parse(URL location, LinkType type, int timeoutMillis) throws IOException {
         Connection con = HttpConnection.connect(location);
         con.timeout(timeoutMillis);

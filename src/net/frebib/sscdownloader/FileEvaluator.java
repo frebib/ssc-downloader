@@ -41,7 +41,7 @@ public class FileEvaluator implements Completion<DownloadTask> {
         if (task != null)
             results.add(task);
 
-        if (executor.getPool().getActiveCount() < 1) {
+        if (executor.getPool().getQueue().size() < 1) {
             executor.shutdown();
             if (done != null)
                 done.onComplete(results);

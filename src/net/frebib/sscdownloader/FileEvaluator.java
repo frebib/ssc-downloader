@@ -37,7 +37,7 @@ public class FileEvaluator implements Completion<DownloadTask> {
     }
 
     @Override
-    public void onComplete(DownloadTask task) {
+    public void onComplete(DownloadTask task) throws Exception {
         if (task != null)
             results.add(task);
 

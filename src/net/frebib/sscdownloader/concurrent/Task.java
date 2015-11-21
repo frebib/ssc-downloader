@@ -22,7 +22,17 @@ public abstract class Task<T, R> implements Callable<R>, Function<T, R> {
     @Override
     public R call() throws Exception {
         R r = this.call(t);
-        done.stream().forEach(d -> { if (d != null) d.onComplete(r); });
+        done.stream().forEach(d -> {
+            try {
+                if (d != null)
+                    d.onComplete(r);
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (Exception e1) {
+                }
+            }
+        });
         return r;
     }
 }

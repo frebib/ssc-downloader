@@ -49,7 +49,8 @@ public class WebpageCrawler {
 
             return new URL(address);
         } catch (MalformedURLException e) {
-            DownloaderClient.LOG.severe("Address is not valid: " + address);
+            if (address != null && address != "")
+                DownloaderClient.LOG.severe("Address is not valid: " + address);
         }
         return null;
     }

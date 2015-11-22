@@ -9,9 +9,9 @@ public class MimeTypeCollection {
             .add(MimeType.WILDCARD);
 
     public static final MimeTypeCollection COMMON_IMAGES = new MimeTypeCollection()
-            .add(new MimeType("image/gif", "gif"))
-            .add(new MimeType("image/png", "png"))
-            .add(new MimeType("image/bmp", "bmp", "bm"))
+            .add(new MimeType("image/gif",  "gif"))
+            .add(new MimeType("image/png",  "png"))
+            .add(new MimeType("image/bmp",  "bmp", "bm"))
             .add(new MimeType("image/tiff", "tiff", "tif"))
             .add(new MimeType("image/jpeg", "jpg", "jpe", "jpeg", "jps", "jfif"));
 

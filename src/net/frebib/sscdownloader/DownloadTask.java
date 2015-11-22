@@ -1,5 +1,7 @@
 package net.frebib.sscdownloader;
 
+import net.frebib.sscdownloader.concurrent.Task;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,9 +9,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Observable;
-import java.util.concurrent.*;
 
-public class DownloadTask extends Observable implements Callable<DownloadTask> {
+public class DownloadTask extends Task<URL, DownloadTask> {
     private final int CHUNK_SIZE = 4096;
 
     private File file;
@@ -19,15 +20,16 @@ public class DownloadTask extends Observable implements Callable<DownloadTask> {
     private float progress = 0f;
 
     public DownloadTask(URL url, String filename, String path) {
+        super(url);
+
         this.url = url;
         this.file = new File(path, filename);
         this.dlState = State.UNINITIALISED;
     }
 
     @Override
-    public DownloadTask call() throws Exception {
+    public DownloadTask call(URL url) throws Exception {
         DownloaderClient.LOG.fine("Download starting for: " + file.getCanonicalPath());
-
         setState(State.INITIALISED);
 
         HttpURLConnection conn;

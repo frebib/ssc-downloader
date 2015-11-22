@@ -5,7 +5,10 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class MimeTypeCollection {
-    public static final MimeTypeCollection commonImages = new MimeTypeCollection()
+    public static final MimeTypeCollection WILDCARD = new MimeTypeCollection()
+            .add(MimeType.WILDCARD);
+
+    public static final MimeTypeCollection COMMON_IMAGES = new MimeTypeCollection()
             .add(new MimeType("image/gif", "gif"))
             .add(new MimeType("image/png", "png"))
             .add(new MimeType("image/bmp", "bmp", "bm"))
@@ -39,7 +42,7 @@ public class MimeTypeCollection {
     }
 
     public boolean hasExtension(String extension) {
-        return extMap.keySet().contains(extension);
+        return hasMime("*/*") || extMap.keySet().contains(extension);
     }
 
     public boolean hasMime(String mime) {

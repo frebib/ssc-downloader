@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MimeType {
+    public static final MimeType WILDCARD = new MimeType("*/*");
     private String mime;
     private ArrayList<String> exts;
 
@@ -28,7 +29,8 @@ public class MimeType {
     }
 
     public boolean hasExtension(String extension) {
-        return exts.contains(extension.toLowerCase());
+        return exts.contains(extension.toLowerCase())
+                || mime.equals("*/*");
     }
 
     public boolean matches(String mimetype) {
@@ -38,16 +40,16 @@ public class MimeType {
         String[] parts = mimetype.split(";")[0].split("/");
         String[] thisparts = mime.split(";")[0].split("/");
 
-        boolean validA = parts[0].equalsIgnoreCase(thisparts[0]) || parts[0].equals("*");
-        boolean validB = parts[1].equalsIgnoreCase(thisparts[1]) || parts[1].equals("*");
+        boolean validA = parts[0].equalsIgnoreCase(thisparts[0]) || parts[0].equals("*") || thisparts[0].equals("*");
+        boolean validB = parts[1].equalsIgnoreCase(thisparts[1]) || parts[1].equals("*") || thisparts[1 ].equals("*");
         return  validA && validB;
     }
 
     public String getDefaultExtension(){
-        return exts.get(0);
+        return exts.size() > 0 ? exts.get(0) : null;
     }
 
     public static boolean isValid(String mimetype) {
-        return mimetype.matches("^[\\w]+/[-\\w-.+*;]+$");
+        return mimetype.matches("^[a-zA-Z*]+/[a-zA-Z-.+*]+[\\s?;*]?(\\s*?.*)");
     }
 }

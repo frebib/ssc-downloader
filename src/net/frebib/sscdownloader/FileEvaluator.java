@@ -11,22 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FileEvaluator implements Completion<DownloadTask> {
+public class FileEvaluator {
     private final BatchExecutor<Task<URL, DownloadTask>, DownloadTask> executor;
     private final MimeTypeCollection mimeTypes;
 
     private final List<DownloadTask> results;
-    private final Completion<List<DownloadTask>> done;
 
     public FileEvaluator(MimeTypeCollection mimes, int threadCount, Completion<List<DownloadTask>> done) {
         executor = new BatchExecutor<>(threadCount);
+        executor.done(done);
         results = new ArrayList<>();
         mimeTypes = mimes;
-        this.done = done;
     }
 
     public FileEvaluator add(URL url, String directory, Completion<DownloadTask> done) {
-        executor.add(new EvalTask(url, directory).done(done, this));
+        executor.add(new EvalTask(url, directory).done(done));
         return this;
     }
 
@@ -38,18 +37,6 @@ public class FileEvaluator implements Completion<DownloadTask> {
     public FileEvaluator shutdown() {
         executor.shutdown();
         return this;
-    }
-
-    @Override
-    public void onComplete(DownloadTask task) throws Exception {
-        if (task != null)
-            results.add(task);
-
-        if (executor.getPool().getQueue().size() < 1) {
-            executor.shutdown();
-            if (done != null)
-                done.onComplete(results);
-        }
     }
 
     private class EvalTask extends Task<URL, DownloadTask> {

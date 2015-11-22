@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FileEvaluator implements Completion<DownloadTask> {
     private final BatchExecutor<Task<URL, DownloadTask>, DownloadTask> executor;
@@ -24,16 +25,19 @@ public class FileEvaluator implements Completion<DownloadTask> {
         this.done = done;
     }
 
-    public void add(URL url, String directory, Completion<DownloadTask> done) {
+    public FileEvaluator add(URL url, String directory, Completion<DownloadTask> done) {
         executor.add(new EvalTask(url, directory).done(done, this));
+        return this;
     }
 
-    public void start() throws InterruptedException {
+    public FileEvaluator start() throws InterruptedException {
         executor.start();
+        return this;
     }
 
-    public void shutdown() {
+    public FileEvaluator shutdown() {
         executor.shutdown();
+        return this;
     }
 
     @Override
@@ -58,39 +62,48 @@ public class FileEvaluator implements Completion<DownloadTask> {
 
         @Override
         public DownloadTask call(URL url) throws Exception {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            conn.connect();
+            try {
+                DownloaderClient.LOG.finer("Evaluating file at \"" + url.toString() + "\"");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("HEAD");
+                conn.connect();
 
-            // Test file extension
-            String mimeStr = conn.getContentType();
-            File f = new File(conn.getURL().getFile());
-            String filename = f.getCanonicalFile().getName();
+                // Test file extension
+                String mimeStr = conn.getContentType();
+                File f = new File(conn.getURL().getFile());
+                String filename = f.getCanonicalFile().getName();
 
-            String ext = "";
-            int index = 0;
-            index = filename.lastIndexOf('.');
-            if (index > 0)
-                ext = filename.substring(index + 1);
-            filename = filename.substring(0, index);
+                String ext = "";
+                int index = 0;
+                index = filename.lastIndexOf('.');
+                if (index > 0) {
+                    ext = filename.substring(index + 1);
+                    filename = filename.substring(0, index);
+                }
 
-            // Check if mime type is valid
-            MimeType type = mimeTypes.getMimeType(mimeStr);
-            if (type != null) {
-                // Use the default extension if it's invalid
-                if (!mimeTypes.hasExtension(ext))
-                    ext = type.getDefaultExtension();
+                // Check if mime type is valid
+                if (mimeTypes.hasMime(mimeStr)) {
+                    // Use the default extension if it's invalid
+                    if (!mimeTypes.hasExtension(ext)) {
+                        MimeType type = mimeTypes.getMimeType(mimeStr);
+                        if (type != null)
+                            ext = Optional.ofNullable(type.getDefaultExtension()).orElse("");
+                    }
 
-                if (ext.isEmpty())     // Otherwise have no extension
-                    DownloaderClient.LOG.warning("File \"" + filename + "\" has no extension with mime: " + mimeStr);
-            } else
-                return null;    // Return null if the mime type isn't valid
+                    if (ext.isEmpty())     // Otherwise have no extension
+                        DownloaderClient.LOG.warning("File \"" + filename + "\" has no extension with mime: " + mimeStr);
+                } else
+                    return null;    // Return null if the mime type isn't valid
 
-            // Append new extension && remove invalid chars
-            if (!ext.isEmpty())
-                filename = filename.replaceAll("[^a-zA-Z0-9.-]", "_") + '.' + ext;
+                // Append new extension && remove invalid chars
+                if (!ext.isEmpty())
+                    filename = filename.replaceAll("[^a-zA-Z0-9.-]", "_") + '.' + ext;
 
-            return new DownloadTask(url, filename, directory);
+                return new DownloadTask(url, filename, directory);
+            } catch (Exception e) {
+                DownloaderClient.LOG.exception(e);
+            }
+            return null;
         }
     }
 }

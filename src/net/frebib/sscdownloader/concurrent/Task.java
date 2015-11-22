@@ -2,13 +2,10 @@ package net.frebib.sscdownloader.concurrent;
 
 import net.frebib.sscdownloader.DownloaderClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 
-public abstract class Task<T, R> implements Callable<R>, Function<T, R> {
+public abstract class Task<T, R> extends Observable implements Callable<R>, Function<T, R> {
     protected final List<Completion<R>> done;
     private final T t;
 

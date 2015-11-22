@@ -145,10 +145,11 @@ public class DownloadFrame extends JFrame implements Observer {
             chooser.setMultiSelectionEnabled(false);
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-            if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+            int choice = chooser.showOpenDialog(this);
+            if (choice == JFileChooser.APPROVE_OPTION)
                 destination = chooser.getSelectedFile();
-            else {
-                int choice = JOptionPane.showConfirmDialog(this, "Invalid directory.\nPlease try again!",
+            else if (choice != JFileChooser.CANCEL_OPTION) {
+                choice = JOptionPane.showConfirmDialog(this, "Invalid directory.\nPlease try again!",
                         "Invalid Save Directory", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (choice == JOptionPane.OK_OPTION)
                     btnChooseDir.doClick();

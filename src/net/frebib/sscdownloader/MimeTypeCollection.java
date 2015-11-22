@@ -1,6 +1,7 @@
 package net.frebib.sscdownloader;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class MimeTypeCollection {
@@ -19,6 +20,10 @@ public class MimeTypeCollection {
         extMap = new LinkedHashMap<>();
         mimeMap = new LinkedHashMap<>();
     }
+    public MimeTypeCollection(Collection<? extends MimeType> mimeTypes) {
+        super();
+        addAll(mimeTypes);
+    }
 
     public MimeTypeCollection add(MimeType mime) {
         mimes.add(mime);
@@ -28,16 +33,24 @@ public class MimeTypeCollection {
                 .forEach(ext -> extMap.put(ext, mime));
         return this;
     }
+    public MimeTypeCollection addAll(Collection<? extends MimeType> mimeTypes) {
+        mimeTypes.stream().forEach(this::add);
+        return this;
+    }
 
     public boolean hasExtension(String extension) {
         return extMap.keySet().contains(extension);
     }
 
     public boolean hasMime(String mime) {
-        return mimeMap.keySet().contains(mime);
+        return mimeMap.keySet().contains(mime) ||
+               mimes.stream().filter(m -> m.matches(mime)).count() > 0;
     }
 
     public MimeType getMimeType(String mime) {
-        return mimeMap.get(mime);
+        // The "null ?? notnull" coalescing operator
+        // would be amazing right about now
+        MimeType mt = mimeMap.get(mime);
+        return (mt != null ? mt :mimes.stream().filter(m -> m.matches(mime)).findFirst().orElse(null));
     }
 }

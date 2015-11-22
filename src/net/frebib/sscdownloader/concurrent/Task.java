@@ -1,12 +1,15 @@
 package net.frebib.sscdownloader.concurrent;
 
+import net.frebib.sscdownloader.DownloaderClient;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 public abstract class Task<T, R> implements Callable<R>, Function<T, R> {
-    private final List<Completion<R>> done;
+    protected final List<Completion<R>> done;
     private final T t;
 
     public Task(T t) {
@@ -15,7 +18,7 @@ public abstract class Task<T, R> implements Callable<R>, Function<T, R> {
     }
 
     public Task<T, R> done(Completion<R>... done) {
-        Collections.addAll(this.done, done);
+        this.done.addAll(Arrays.asList(done));
         return this;
     }
 
@@ -27,10 +30,7 @@ public abstract class Task<T, R> implements Callable<R>, Function<T, R> {
                 if (d != null)
                     d.onComplete(r);
             } catch (Exception e) {
-                try {
-                    throw e;
-                } catch (Exception e1) {
-                }
+                DownloaderClient.LOG.exception(e);
             }
         });
         return r;

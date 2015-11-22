@@ -14,8 +14,8 @@ public abstract class Task<T, R> extends Observable implements Callable<R>, Func
         this.t = t;
     }
 
-    public Task<T, R> done(Completion<R>... done) {
-        this.done.addAll(Arrays.asList(done));
+    public Task<T, R> done(Completion<R> done) {
+        this.done.add(done);
         return this;
     }
 

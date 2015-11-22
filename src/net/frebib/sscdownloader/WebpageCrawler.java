@@ -43,7 +43,7 @@ public class WebpageCrawler {
 
     private static URL toURL(String address, String parent) {
         try {
-            if (address == null) return null;
+            if (address == null || address.isEmpty()) return null;
             if (address.startsWith("//"))                   // Add missing protocol
                 address = parent.split("//")[0] + address;  // if link is relative
 
@@ -51,7 +51,7 @@ public class WebpageCrawler {
 
             return new URL(address);
         } catch (MalformedURLException e) {
-            if (address != null && address != "")
+            if (address.isEmpty())
                 DownloaderClient.LOG.severe("Address is not valid: " + address);
         }
         return null;

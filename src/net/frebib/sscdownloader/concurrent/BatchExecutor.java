@@ -2,7 +2,6 @@ package net.frebib.sscdownloader.concurrent;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -48,7 +47,9 @@ public class BatchExecutor<T extends Callable<R>, R> {
      * {@link Callable} task that was submitted for execution
      */
     public void start() throws InterruptedException {
-        pool.invokeAll(this.tasks);
+        this.tasks.stream()
+                .filter(t -> t != null)
+                .forEach(pool::submit);
     }
 
     /**

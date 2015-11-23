@@ -169,7 +169,10 @@ public class DownloadFrame extends JFrame implements Observer {
         return status;
     }
     public String getURL() {
-        return txtUrl.getText();
+        String url = txtUrl.getText();
+        if (!url.substring(0, 8).contains("://"))
+            url = "http://" + url;
+        return url;
     }
     public String getSaveDir() {
         return txtSaveDir.getText();
@@ -188,6 +191,10 @@ public class DownloadFrame extends JFrame implements Observer {
     public void decDownloadCount() {
         this.count--;
         updateStatus();
+    }
+
+    public void setURL(String url) {
+        txtUrl.setText(url);
     }
     public void setDownloadCount(int count) {
         this.count = count;

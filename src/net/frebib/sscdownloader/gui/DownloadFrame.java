@@ -47,11 +47,7 @@ public class DownloadFrame extends JFrame implements Observer {
         lblDir = new JLabel("Save Directory");
         lblDir.setHorizontalAlignment(SwingConstants.RIGHT);
         txtUrl = new JTextField();
-        // TODO: Remove, for testing only
-        txtUrl.setText("http://imgur.com/");
         txtSaveDir = new JTextField();
-        // TODO: Remove, for testing only
-        txtSaveDir.setText("/home/frebib/Downloads/imgur");
 
         int coreCount = Runtime.getRuntime().availableProcessors();
         SpinnerModel sm = new SpinnerNumberModel(coreCount * 2, 1, coreCount * 16, 1);

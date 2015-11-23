@@ -25,7 +25,6 @@ public class DownloadFrame extends JFrame implements Observer {
                         DONE_LABEL          = "Downloads Complete!";
 
     private int count;
-    private File destination;
     private FilterFrame filterFrame;
     private Status status = Status.UNINITIALIZED;
 
@@ -146,15 +145,18 @@ public class DownloadFrame extends JFrame implements Observer {
             chooser.setMultiSelectionEnabled(false);
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
+            File dest = null;
             int choice = chooser.showOpenDialog(this);
             if (choice == JFileChooser.APPROVE_OPTION)
-                destination = chooser.getSelectedFile();
+                dest = chooser.getSelectedFile();
             else if (choice != JFileChooser.CANCEL_OPTION) {
                 choice = JOptionPane.showConfirmDialog(this, "Invalid directory.\nPlease try again!",
                         "Invalid Save Directory", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (choice == JOptionPane.OK_OPTION)
                     btnChooseDir.doClick();
             }
+            if (dest != null)
+                txtSaveDir.setText(dest.getAbsolutePath());
         });
         btnFilter.addActionListener(e -> {
             // TODO: Add btnFilter form here.

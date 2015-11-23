@@ -47,6 +47,14 @@ public class DownloadFrame extends JFrame implements Observer {
         lblDir = new JLabel("Save Directory");
         lblDir.setHorizontalAlignment(SwingConstants.RIGHT);
         txtUrl = new JTextField();
+        txtUrl.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                String newStr = new StringBuilder(txtUrl.getText()).insert(offs, str).toString();
+                if (newStr.matches("^([!#$&-;=?-\\[\\]_a-z~]|%[^0-9a-fA-F]{2})+$"))
+                    super.insertString(offs, str, a);
+            }
+        });
         txtSaveDir = new JTextField();
 
         int coreCount = Runtime.getRuntime().availableProcessors();

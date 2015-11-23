@@ -50,7 +50,7 @@ public class FileEvaluator {
         @Override
         public DownloadTask call(URL url) throws Exception {
             try {
-                DownloaderClient.LOG.finer("Evaluating file at \"" + url.toString() + "\"");
+                DownloaderClient.LOG.finer("Evaluating url: \"" + url.toString() + "\"");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("HEAD");
                 conn.connect();

@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Observable;
 
 public class DownloadTask extends Task<URL, DownloadTask> {
     private final int CHUNK_SIZE = 4096;
@@ -121,12 +120,12 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     }
 
     public enum State {
-        UNINITIALISED(Color.BLUE, 1),
-        INITIALISED(Color.YELLOW, 2),
-        DOWNLOADING(Color.ORANGE, 4),
-        COMPLETED(Color.GREEN, 8),
-        CANCELLED(Color.GRAY, 16),
-        ERROR(Color.RED, 32);
+        UNINITIALISED(new Color(30, 80, 170), 1),
+        INITIALISED(new Color(255, 115, 0), 4),
+        DOWNLOADING(new Color(255, 255, 0), 2),
+        COMPLETED(new Color(0, 135, 0), 8),
+        CANCELLED(new Color(140, 140, 140), 16),
+        ERROR(new Color(255, 0, 0), 32);
 
         private Color col;
         private short v;

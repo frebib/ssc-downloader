@@ -155,7 +155,7 @@ public class DownloadFrame extends JFrame implements Observer {
                     btnChooseDir.doClick();
             }
         });
-        btnFilter.addActionListener(e ->  {
+        btnFilter.addActionListener(e -> {
             // TODO: Add btnFilter form here.
         });
     }

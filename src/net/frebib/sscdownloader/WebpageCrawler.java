@@ -38,6 +38,7 @@ public class WebpageCrawler {
                 })
                 .map(s -> toURL(s, doc.location()))
                 .filter(url -> url != null)
+                .distinct()
                 .collect(Collectors.toList());
     }
 

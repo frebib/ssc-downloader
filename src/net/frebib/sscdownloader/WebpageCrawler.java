@@ -45,7 +45,7 @@ public class WebpageCrawler {
     private static URL toURL(String address, String parent) {
         try {
             if (address == null || address.isEmpty()) return null;
-            if (address.startsWith("//"))                   // Add missing protocol
+            if (address.startsWith("//") && parent != null) // Add missing protocol
                 address = parent.split("//")[0] + address;  // if link is relative
 
             DownloaderClient.LOG.finest(address);

@@ -41,7 +41,7 @@ public class DownloadFrame extends JFrame implements Observer {
         pnlMain.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         pnlTop = new JPanel(new GridBagLayout());
         pnlButton = new JPanel(new GridBagLayout());
-        pnlButton.setBorder(BorderFactory.createEmptyBorder(8, 0, 12, 0));
+        pnlButton.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
 
         lblUrl = new JLabel("Webpage");
         lblUrl.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -67,6 +67,7 @@ public class DownloadFrame extends JFrame implements Observer {
         dlList.setCellRenderer(new DownloadCellRenderer());
         listModel.setList(dlList);
         scroller = new JScrollPane(dlList);
+        scroller.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
 
         GridBagConstraints c = new GridBagConstraints();
         Insets none = c.insets;

@@ -185,6 +185,10 @@ public class DownloadFrame extends JFrame implements Observer {
         this.count++;
         updateStatus();
     }
+    public void decDownloadCount() {
+        this.count--;
+        updateStatus();
+    }
     public void setDownloadCount(int count) {
         this.count = count;
         updateStatus();
@@ -199,7 +203,7 @@ public class DownloadFrame extends JFrame implements Observer {
                 btnGo.setText(GET_LINKS_LABEL);
                 break;
             case GRABBING:
-                btnGo.setText(GETTING_LINKS_LABEL + listModel.size() + " of " + count);
+                btnGo.setText(GETTING_LINKS_LABEL + listModel.size() + " of " + (count + listModel.size()));
                 break;
             case GRABBED:
                 btnGo.setText(GET_FILES_LABEL);

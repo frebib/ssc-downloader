@@ -116,6 +116,9 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     public String getFilepath() {
         return file.getAbsolutePath();
     }
+    public String getURL() {
+        return url.toString();
+    }
 
     public enum State {
         UNINITIALISED(Color.BLUE, 1),

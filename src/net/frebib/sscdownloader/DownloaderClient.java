@@ -110,7 +110,7 @@ public class DownloaderClient {
                             .map(StackTraceElement::toString)
                             .collect(Collectors.joining("\n"));
 
-                    JOptionPane.showMessageDialog(frame, "Failed to Connect\n" + strace + ex.getMessage(),
+                    JOptionPane.showMessageDialog(frame, "Failed to Connect\n"+ ex.getMessage() + strace,
                             "Failed to Connect", JOptionPane.INFORMATION_MESSAGE);
                 })
                 .start(webpage);

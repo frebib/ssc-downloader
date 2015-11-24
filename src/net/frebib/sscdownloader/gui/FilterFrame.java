@@ -27,9 +27,9 @@ public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
     private MimeType prev;
     private boolean editing;
 
-    public FilterFrame(Frame parent) {
+    public FilterFrame(Frame parent, MimeTypeCollection initCollection) {
         super(parent, "Apply Filetype Filters", true);
-        listModel = new ArrayListModel<>();
+        listModel = new ArrayListModel<>(initCollection.getMimes());
         mimeList = new JList<>(listModel);
         mimeList.setCellRenderer(this);
         mimeList.addMouseListener(new RightClickHandler());

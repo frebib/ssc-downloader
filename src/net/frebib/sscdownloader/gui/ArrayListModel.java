@@ -13,6 +13,9 @@ public class ArrayListModel<T> extends AbstractListModel<T> {
     public ArrayListModel() {
         this.list = new ArrayList<T>();
     }
+    public ArrayListModel(List<T> mimes) {
+        this.list = new ArrayList<T>(mimes);
+    }
 
     public boolean add(T e) {
         boolean b = list.add(e);

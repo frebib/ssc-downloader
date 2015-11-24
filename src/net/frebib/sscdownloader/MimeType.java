@@ -3,6 +3,7 @@ package net.frebib.sscdownloader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class MimeType {
@@ -32,6 +33,9 @@ public class MimeType {
     public List<String> getExtensions() {
         return exts;
     }
+    public String getDelimitedExts(String delim) {
+        return exts.stream().map(s -> '.' + s).collect(Collectors.joining(delim));
+    }
 
     public boolean hasExtension(String extension) {
         return exts.contains(extension.toLowerCase())
@@ -60,9 +64,6 @@ public class MimeType {
 
     @Override
     public String toString() {
-        return mime + " => " + exts.stream()
-                .distinct()
-                .map(s -> '.' + s)
-                .collect(Collectors.joining(", "));
+        return mime + " => " + getDelimitedExts(", ");
     }
 }

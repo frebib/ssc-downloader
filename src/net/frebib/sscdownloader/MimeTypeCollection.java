@@ -35,14 +35,18 @@ public class MimeTypeCollection {
     private ArrayList<MimeType> mimes;
     private LinkedHashMap<String, MimeType> extMap, mimeMap;
 
-    public MimeTypeCollection(String name) {
-        this.name = name;
+    public MimeTypeCollection() {
+        super();
         mimes = new ArrayList<>();
         extMap = new LinkedHashMap<>();
         mimeMap = new LinkedHashMap<>();
     }
+    public MimeTypeCollection(String name) {
+        this();
+        this.name = name;
+    }
     public MimeTypeCollection(Collection<? extends MimeType> mimeTypes) {
-        super();
+        this();
         addAll(mimeTypes);
     }
 

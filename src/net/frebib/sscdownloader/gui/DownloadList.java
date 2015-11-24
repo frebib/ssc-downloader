@@ -9,11 +9,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class DownloadList extends JList<DownloadTask> implements MouseListener, KeyListener {
-    private DownloadCellRenderer cr = new DownloadCellRenderer();
 
     public DownloadList(ListModel<DownloadTask> model) {
         super(model);
-        setCellRenderer(cr);
 
         addMouseListener(this);
         addKeyListener(this);

@@ -177,7 +177,7 @@ public class DownloadFrame extends JFrame implements Observer {
     }
     public String getURL() {
         String url = txtUrl.getText();
-        if (!url.substring(0, 8).contains("://"))
+        if (url.length() >= 8 && !url.substring(0, 8).contains("://"))
             url = "http://" + url;
         return url;
     }

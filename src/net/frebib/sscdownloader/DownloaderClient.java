@@ -61,8 +61,15 @@ public class DownloaderClient {
                             ex.getMessage(), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        frame.setURL(webpage.toString());
+        // Validate Directory
         final String dir = frame.getSaveDir();
+        if (dir.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Please enter a directory",
+                    "Invalid Directory", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        frame.setURL(webpage.toString());
         final int threads = frame.getThreadCount();
 
         // TODO: Implement filterFrame and MimeType getting

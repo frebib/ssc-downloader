@@ -54,6 +54,7 @@ public class DownloaderClient {
 
         // TODO: Add null/empty checks on folder and
 
+        // Validate URL
         URL webpage;
         try {
             webpage = new URL(frame.getURL());
@@ -91,6 +92,7 @@ public class DownloaderClient {
             downloader.addAll(tasks);
         });
 
+        // Fetch links and parse them
         new Worker<URL, List<URL>>()
                 .todo(url -> WebpageCrawler.parse(url, WebpageCrawler.LinkType.Both, 30000))
                 .done(links -> {

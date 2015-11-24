@@ -51,6 +51,7 @@ public class MimeType {
         String[] parts = mimetype.split(";")[0].split("/");
         String[] thisparts = mime.split(";")[0].split("/");
 
+        // TODO: Update this to work with partial wildcard matching such as "text/ht*"
         boolean validA = parts[0].equalsIgnoreCase(thisparts[0]) || parts[0].equals("*") || thisparts[0].equals("*");
         boolean validB = parts[1].equalsIgnoreCase(thisparts[1]) || parts[1].equals("*") || thisparts[1 ].equals("*");
         return  validA && validB;

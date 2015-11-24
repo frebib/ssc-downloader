@@ -8,6 +8,8 @@ import net.frebib.util.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;

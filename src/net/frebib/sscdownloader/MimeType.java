@@ -23,7 +23,7 @@ public class MimeType {
         );
     }
     public static MimeType fromDelimitedExts(String mime, String ext)  throws IllegalArgumentException {
-        String[] exts = ext.toLowerCase().split("[\\W]+");
+        String[] exts = ext.toLowerCase().replaceAll("\\.", "").split("[\\W]+");
         return new MimeType(mime, exts);
     }
 

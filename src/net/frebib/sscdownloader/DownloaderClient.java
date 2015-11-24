@@ -74,9 +74,7 @@ public class DownloaderClient {
         frame.setURL(webpage.toString());
         final int threads = frame.getThreadCount();
 
-        // TODO: Implement filterFrame and MimeType getting
-        //MimeTypeCollection mimes = filterFrame.getMimeTypes();
-        MimeTypeCollection mimes = MimeTypeCollection.COMMON_IMAGES;
+        MimeTypeCollection mimes = frame.getMimeTypeCollection();
         eval = new FileEvaluator(mimes, threads, tasks -> {
             frame.btnGo.setEnabled(true);
             frame.updateStatus(DownloadFrame.Status.GRABBED);

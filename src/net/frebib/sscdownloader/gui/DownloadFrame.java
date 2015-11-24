@@ -28,6 +28,8 @@ public class DownloadFrame extends JFrame implements Observer {
     private FilterFrame filterFrame;
     private Status status = Status.UNINITIALIZED;
 
+    private MimeTypeCollection mimeTypes;
+
     // TODO: Add link type selection
     // TODO: Add ThreadCount changer box
 
@@ -61,7 +63,12 @@ public class DownloadFrame extends JFrame implements Observer {
         SpinnerModel sm = new SpinnerNumberModel(coreCount * 2, 1, coreCount * 16, 1);
         numThreads = new JSpinner(sm);
 
+        filterFrame = new FilterFrame(this);
         btnFilter = new JButton("FileType Filter");
+        btnFilter.addActionListener(e -> {
+            filterFrame.setVisible(true);
+            mimeTypes = filterFrame.getMimeTypes();
+        });
         btnChooseDir = new JButton("Browse");
         btnGo = new JButton(GET_LINKS_LABEL);
 
@@ -172,6 +179,9 @@ public class DownloadFrame extends JFrame implements Observer {
         updateStatus();
     }
 
+    public MimeTypeCollection getMimeTypeCollection() {
+        return mimeTypes;
+    }
     public Status getStatus() {
         return status;
     }

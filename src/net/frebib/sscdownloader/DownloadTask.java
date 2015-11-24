@@ -18,7 +18,7 @@ public class DownloadTask extends Task<URL, DownloadTask> {
 
     private float progress = 0f;
 
-    public DownloadTask(URL url, String filename, String path) {
+    public DownloadTask(URL url, String filename, File path) {
         super(url);
 
         this.url = url;

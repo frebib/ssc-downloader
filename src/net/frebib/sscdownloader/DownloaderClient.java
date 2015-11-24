@@ -52,8 +52,6 @@ public class DownloaderClient {
             return;
         }
 
-        // TODO: Add null/empty checks on folder and
-
         // Validate URL
         URL webpage;
         try {
@@ -65,16 +63,24 @@ public class DownloaderClient {
             return;
         }
         // Validate Directory
-        final String dir = frame.getSaveDir();
-        if (dir.isEmpty()) {
+        String dirStr = frame.getSaveDir();
+        if (dirStr.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Please enter a directory",
                     "Invalid Directory", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        frame.setURL(webpage.toString());
-        final int threads = frame.getThreadCount();
+        File dir = new File(dirStr);
+        if (!dir.exists()) {
+            int result = JOptionPane.showConfirmDialog(frame, "The directory doesn't exist.\nDo you want to create it?",
+                    "Directory doesn't exist", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (result != JOptionPane.OK_OPTION) return;
+        }
 
+
+        frame.setURL(webpage.toString());
+
+        final int threads = frame.getThreadCount();
         MimeTypeCollection mimes = frame.getMimeTypeCollection();
         eval = new FileEvaluator(mimes, threads, tasks -> {
             frame.btnGo.setEnabled(true);

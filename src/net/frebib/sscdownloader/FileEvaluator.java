@@ -24,7 +24,7 @@ public class FileEvaluator {
         mimeTypes = mimes;
     }
 
-    public FileEvaluator add(URL url, String directory, Completion<DownloadTask> done) {
+    public FileEvaluator add(URL url, File directory, Completion<DownloadTask> done) {
         executor.add(new EvalTask(url, directory).done(done));
         return this;
     }
@@ -40,9 +40,9 @@ public class FileEvaluator {
     }
 
     private class EvalTask extends Task<URL, DownloadTask> {
-        private String directory;
+        private File directory;
 
-        public EvalTask(URL url, String directory) {
+        public EvalTask(URL url, File directory) {
             super(url);
             this.directory = directory;
         }

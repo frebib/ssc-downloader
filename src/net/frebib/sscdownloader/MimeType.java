@@ -33,8 +33,11 @@ public class MimeType {
     public List<String> getExtensions() {
         return exts;
     }
-    public String getDelimitedExts(String delim) {
-        return exts.stream().map(s -> '.' + s).collect(Collectors.joining(delim));
+    public String getDelimitedExts(String delim, boolean withDots) {
+        if (withDots)
+            return exts.stream().map(s -> '.' + s).collect(Collectors.joining(delim));
+        else
+            return exts.stream().collect(Collectors.joining(delim));
     }
 
     public boolean hasExtension(String extension) {
@@ -64,6 +67,6 @@ public class MimeType {
 
     @Override
     public String toString() {
-        return mime + " => " + getDelimitedExts(", ");
+        return mime + " => " + getDelimitedExts(", ", true);
     }
 }

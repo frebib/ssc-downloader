@@ -22,7 +22,7 @@ public class MimeTypeCollection {
             .add(new MimeType("text/plain", "txt", "text", "log", "list"))
             .add(new MimeType("text/html",  "html", "htm", "php", "htmls", "xhtml", "htx", "shtml"))
             .add(new MimeType("text/xml",   "xml"))
-            .add(new MimeType("text/richtext",   "rt", "rtf", "rtx", ""))
+            .add(new MimeType("text/richtext",   "rt", "rtf", "rtx"))
             .add(new MimeType("text/ecmascript", "js"))
             .add(new MimeType("text/javascript", "js"));
 

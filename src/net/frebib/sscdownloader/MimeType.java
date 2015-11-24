@@ -10,7 +10,7 @@ public class MimeType {
     private String mime;
     private ArrayList<String> exts;
 
-    public MimeType(String mimetype, String... extensions) {
+    public MimeType(String mimetype, String... extensions) throws IllegalArgumentException {
         if (!isValid(mimetype))
             throw new IllegalArgumentException("\"" + mimetype + "\" is not a valid Mime Type");
         mime = mimetype;
@@ -21,6 +21,11 @@ public class MimeType {
                 .collect(Collectors.toList())
         );
     }
+    public static MimeType fromDelimitedExts(String mime, String ext)  throws IllegalArgumentException {
+        String[] exts = ext.toLowerCase().split("[\\W]+");
+        return new MimeType(mime, exts);
+    }
+
     public String getMime() {
         return mime;
     }

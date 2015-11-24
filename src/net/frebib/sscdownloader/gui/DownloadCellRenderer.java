@@ -7,7 +7,6 @@ import java.awt.*;
 
 public class DownloadCellRenderer extends JPanel implements ListCellRenderer<DownloadTask> {
     private final Color BG_COL, FG_COL, HL_BG_COL, HL_FG_COL;
-    private final Font DEF_FONT;
 
     private JPanel downloadCol, textPanel;
     private JLabel filename, filepath;
@@ -57,8 +56,6 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
         FG_COL = filename.getForeground();
         HL_BG_COL = lf.getColor("List.selectionBackground");
         HL_FG_COL = lf.getColor("List.selectionForeground");
-
-        DEF_FONT = filename.getFont();
     }
 
     @Override

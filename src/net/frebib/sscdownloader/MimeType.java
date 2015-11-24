@@ -57,4 +57,12 @@ public class MimeType {
     public static boolean isValid(String mimetype) {
         return mimetype.matches("^[a-zA-Z*]+/[a-zA-Z-.+*]+[\\s?;*]?(\\s*?.*)");
     }
+
+    @Override
+    public String toString() {
+        return mime + " => " + exts.stream()
+                .distinct()
+                .map(s -> '.' + s)
+                .collect(Collectors.joining(", "));
+    }
 }

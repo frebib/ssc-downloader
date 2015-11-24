@@ -3,6 +3,7 @@ package net.frebib.sscdownloader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class MimeTypeCollection {
@@ -72,6 +73,10 @@ public class MimeTypeCollection {
         // would be amazing right about now
         MimeType mt = mimeMap.get(mime);
         return (mt != null ? mt : mimes.stream().filter(m -> m.matches(mime)).findFirst().orElse(null));
+    }
+
+    public List<MimeType> getMimes() {
+        return mimes;
     }
 
     @Override

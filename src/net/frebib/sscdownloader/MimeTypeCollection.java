@@ -47,6 +47,7 @@ public class MimeTypeCollection {
     }
 
     public MimeTypeCollection add(MimeType mime) {
+        if (mime == null) return this;
         mimes.add(mime);
         mimeMap.put(mime.getMime(), mime);
         mime.getExtensions()

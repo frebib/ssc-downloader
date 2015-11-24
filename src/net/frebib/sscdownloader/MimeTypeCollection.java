@@ -62,6 +62,6 @@ public class MimeTypeCollection {
         // The "null ?? notnull" coalescing operator
         // would be amazing right about now
         MimeType mt = mimeMap.get(mime);
-        return (mt != null ? mt :mimes.stream().filter(m -> m.matches(mime)).findFirst().orElse(null));
+        return (mt != null ? mt : mimes.stream().filter(m -> m.matches(mime)).findFirst().orElse(null));
     }
 }

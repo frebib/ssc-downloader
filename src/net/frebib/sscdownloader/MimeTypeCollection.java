@@ -28,7 +28,7 @@ public class MimeTypeCollection {
             .add(new MimeType("text/javascript", "js"));
 
     static {
-        DEF_COLLECTIONS = new MimeTypeCollection[]{WILDCARD, COMMON_IMAGES, COMMON_TEXTS};
+        DEF_COLLECTIONS = new MimeTypeCollection[] { WILDCARD, COMMON_IMAGES, COMMON_TEXTS };
     }
 
     private String name;

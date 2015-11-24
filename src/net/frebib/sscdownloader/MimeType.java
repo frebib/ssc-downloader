@@ -41,8 +41,7 @@ public class MimeType {
     }
 
     public boolean hasExtension(String extension) {
-        return exts.contains(extension.toLowerCase())
-                || mime.equals("*/*");
+        return exts.contains(extension.toLowerCase()) || mime.equals("*/*");
     }
 
     public boolean matches(String mimetype) {

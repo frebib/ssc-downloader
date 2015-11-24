@@ -25,8 +25,6 @@ public class WebpageCrawler {
         if (type == LinkType.Image || type == LinkType.Both)
             els.addAll(doc.getElementsByTag("img"));
 
-        // TODO: Remove duplicate links
-
         return els.stream()
                 .map(e -> {
                     // Use `abs:` prefix to attributes to get absolute path

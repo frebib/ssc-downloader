@@ -62,7 +62,7 @@ public class MimeType {
     }
 
     public static boolean isValid(String mimetype) {
-        return mimetype.matches("^[a-zA-Z*]+/[a-zA-Z-.+*]+[\\s?;*]?(\\s*?.*)");
+        return mimetype != null && mimetype.matches("^[a-zA-Z*]+/[a-zA-Z-.+*]+[\\s?;*]?(\\s*?.*)");
     }
 
     @Override

@@ -74,7 +74,10 @@ public class DownloaderClient {
         if (!dir.exists()) {
             int result = JOptionPane.showConfirmDialog(frame, "The directory doesn't exist.\nDo you want to create it?",
                     "Directory doesn't exist", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (result != JOptionPane.OK_OPTION) return;
+            if (result == JOptionPane.OK_OPTION)
+                dir.mkdirs();
+            else
+                return;
         }
 
 

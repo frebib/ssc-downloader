@@ -101,7 +101,7 @@ public class DownloaderClient {
             tasks.stream().forEach(t ->
                     t.done(r -> frame.incDownloadCount()));
 
-            downloader = new BatchExecutor<>(threads);
+            downloader = new BatchExecutor<>(frame.getThreadCount());
             downloader.done(res -> frame.updateStatus(DownloadFrame.Status.DOWNLOADED));
             downloader.addAll(tasks);
         });

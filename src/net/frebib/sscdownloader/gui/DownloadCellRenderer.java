@@ -17,6 +17,7 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
 
         downloadCol = new JPanel();
         downloadCol.setPreferredSize(new Dimension(16, 1));
+        downloadCol.setMinimumSize(downloadCol.getPreferredSize());
 
         textPanel = new JPanel(new GridBagLayout());
 

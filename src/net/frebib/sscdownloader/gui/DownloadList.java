@@ -21,7 +21,7 @@ public class DownloadList extends JList<DownloadTask> implements KeyListener {
         mi.setEnabled(false);
         menu.add(mi);
 
-        mi = new JMenuItem(String.format("%.1f", task.getProgress()) + "% Complete");
+        mi = new JMenuItem(String.format("%.1f%% Complete", task.getProgress()));
         mi.setEnabled(false);
         menu.add(mi);
 

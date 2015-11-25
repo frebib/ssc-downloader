@@ -24,6 +24,7 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
         filename = new JLabel();
         filepath = new JLabel();
         progress = new JProgressBar();
+        progress.setStringPainted(true);
 
         filename.setHorizontalAlignment(SwingConstants.LEFT);
         filepath.setHorizontalAlignment(SwingConstants.LEFT);
@@ -68,8 +69,26 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
         filename.setText(dl.getFilename());
         filepath.setText("> " + dl.getFilepath());
         progress.setValue((int) dl.getProgress());
+        progress.setString(getProgressText(dl));
 
         return this;
+    }
+
+    private String getProgressText(DownloadTask task) {
+        switch (task.getState()) {
+            case UNINITIALISED:
+                return "Waiting";
+            case INITIALISED:
+                return "Initialising";
+            case COMPLETED:
+                return "Complete";
+            case CANCELLED:
+                return "Cancelled";
+            case ERROR:
+                return "Error";
+            default:
+                return String.format("%.1f%%",task.getProgress());
+        }
     }
 
     @Override

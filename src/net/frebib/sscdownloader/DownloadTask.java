@@ -28,6 +28,9 @@ public class DownloadTask extends Task<URL, DownloadTask> {
 
     @Override
     public DownloadTask call(URL url) throws Exception {
+        if (dlState == State.CANCELLED)
+            return this;
+
         DownloaderClient.LOG.fine("Download starting for: " + file.getCanonicalPath());
         setState(State.INITIALISED);
 
@@ -89,6 +92,8 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     }
 
     private void setState(State state) {
+        if (state == State.CANCELLED && dlState.getValue() > 4)
+            return;
         dlState = state;
         setChanged();
         notifyObservers(state);
@@ -135,6 +140,9 @@ public class DownloadTask extends Task<URL, DownloadTask> {
             this.v = (short) val;
         }
 
+        public short getValue() {
+            return v;
+        }
         public Color getCol() {
             return col;
         }

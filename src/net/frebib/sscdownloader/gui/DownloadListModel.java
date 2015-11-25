@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class DownloadListModel extends DefaultListModel<DownloadTask> implements Observer {
+public class DownloadListModel extends ArrayListModel<DownloadTask> implements Observer {
     private JList<DownloadTask> list;
     private int lastIndex;
 
@@ -28,10 +28,11 @@ public class DownloadListModel extends DefaultListModel<DownloadTask> implements
         dl.addObserver(this);
     }
     @Override
-    public void addElement(DownloadTask dl) {
-        if (dl == null || contains(dl)) return;
-        super.addElement(dl);
+    public boolean add(DownloadTask dl) {
+        if (dl == null || contains(dl)) return false;
+        boolean ret = super.add(dl);
         dl.addObserver(this);
+        return ret;
     }
     @Override
     public void update(Observable o, Object arg) {

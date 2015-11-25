@@ -264,13 +264,13 @@ public class DownloadFrame extends JFrame implements Observer {
                 btnGo.setText(GET_LINKS_LABEL);
                 break;
             case GRABBING:
-                btnGo.setText(GETTING_LINKS_LABEL + listModel.size() + " of " + (count + listModel.size()));
+                btnGo.setText(GETTING_LINKS_LABEL + listModel.getSize() + " of " + (count + listModel.getSize()));
                 break;
             case GRABBED:
                 btnGo.setText(GET_FILES_LABEL);
                 break;
             case DOWNLOADING:
-                btnGo.setText(GETTING_FILES_LABEL + count + " of " + listModel.size());
+                btnGo.setText(GETTING_FILES_LABEL + count + " of " + listModel.getSize());
                 break;
             case DOWNLOADED:
                 btnGo.setText(DONE_LABEL);

@@ -45,8 +45,20 @@ public class ArrayListModel<T> extends AbstractListModel<T> {
         fireIntervalRemoved(e, index, index);
     }
 
+    public boolean contains(T e) {
+        return list.contains(e);
+    }
+
+    public int indexOf(Object o) {
+        return list.indexOf(o);
+    }
+
     public void clear() {
         list.clear();
+    }
+
+    public boolean isEmpty() {
+        return list.size() < 1;
     }
 
     @Override

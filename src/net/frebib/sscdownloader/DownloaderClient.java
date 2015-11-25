@@ -116,7 +116,7 @@ public class DownloaderClient {
                     frame.setDownloadCount(links.size());
                     links.stream().forEach(url ->
                             eval.add(url, dir, dl -> {
-                                listModel.addElement(dl);
+                                listModel.add(dl);
                                 frame.decDownloadCount();
                             }));
                     eval.start();

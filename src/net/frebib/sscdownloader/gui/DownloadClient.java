@@ -250,7 +250,7 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
             listModel.clear();
             reset();
             return;
-        } else if(!listModel.isEmpty()) {
+        } else if (!listModel.isEmpty()) {
             try {
                 updateStatus(DownloadClient.Status.DOWNLOADING);
                 downloader.start();
@@ -289,13 +289,44 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
                 return;
         }
 
-        setURL(webpage.toString());
+        fetch(webpage, dir);
+    }
 
+    public void fetch(URL link, File outputDir) {
+        setURL(link.toString());
+
+        evaluate(link, outputDir);
+
+        // Fetch links and parse them
+        btnGo.setEnabled(false);
+        updateStatus(DownloadClient.Status.GRABBING);
+        new Worker<URL, List<URL>>()
+                .todo(url -> WebpageCrawler.parse(url, WebpageCrawler.LinkType.Both, 30000))
+                .done(links -> {
+                    setDownloadCount(links.size());
+                    links.stream().forEach(url ->
+                            eval.add(url, outputDir, dl -> {
+                                SwingUtilities.invokeLater(() -> listModel.add(dl));
+                                decDownloadCount();
+                            }));
+                    eval.start();
+                }).error(ex -> {
+            String strace = ex.getMessage() +
+                    Arrays.stream(ex.getStackTrace())
+                            .limit(5)
+                            .map(StackTraceElement::toString)
+                            .collect(Collectors.joining("\n"));
+
+            JOptionPane.showMessageDialog(this, "Failed to Connect\n"+ ex.getMessage() + strace,
+                    "Failed to Connect", JOptionPane.INFORMATION_MESSAGE);
+        }).start(link);
+    }
+
+    public void evaluate(URL link, File outputDir) {
         // Create a FileEvaluator object and
         // define what to do when it completes
         final int threads = getThreadCount();
-        MimeTypeCollection mimes = mimeTypes;
-        eval = new FileEvaluator(mimes, threads, tasks -> {
+        eval = new FileEvaluator(mimeTypes, threads, tasks -> {
             btnGo.setEnabled(true);
             updateStatus(DownloadClient.Status.GRABBED);
             setDownloadCount(0);
@@ -310,31 +341,6 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
             downloader.done(res -> updateStatus(DownloadClient.Status.DOWNLOADED));
             downloader.addAll(tasks);
         });
-
-        // Fetch links and parse them
-        btnGo.setEnabled(false);
-        updateStatus(DownloadClient.Status.GRABBING);
-        new Worker<URL, List<URL>>()
-                .todo(url -> WebpageCrawler.parse(url, WebpageCrawler.LinkType.Both, 30000))
-                .done(links -> {
-                    setDownloadCount(links.size());
-                    links.stream().forEach(url ->
-                            eval.add(url, dir, dl -> {
-                                listModel.add(dl);
-                                decDownloadCount();
-                            }));
-                    eval.start();
-                }).error(ex -> {
-            String strace = ex.getMessage() +
-                    Arrays.stream(ex.getStackTrace())
-                            .limit(5)
-                            .map(StackTraceElement::toString)
-                            .collect(Collectors.joining("\n"));
-
-            JOptionPane.showMessageDialog(this, "Failed to Connect\n"+ ex.getMessage() + strace,
-                    "Failed to Connect", JOptionPane.INFORMATION_MESSAGE);
-        })
-                .start(webpage);
     }
 
     @Override

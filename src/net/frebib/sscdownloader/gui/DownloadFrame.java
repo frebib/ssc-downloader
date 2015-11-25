@@ -1,9 +1,15 @@
 package net.frebib.sscdownloader.gui;
 
-import net.frebib.sscdownloader.*;
+import net.frebib.sscdownloader.DownloadTask;
+import net.frebib.sscdownloader.MimeTypeCollection;
+import net.frebib.sscdownloader.WebpageCrawler;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
@@ -14,29 +20,26 @@ public class DownloadFrame extends JFrame implements Observer {
     private JList<DownloadTask> dlList;
     private DownloadListModel listModel;
 
-    private JLabel lblUrl, lblDir;
+    private JLabel lblUrl, lblDir, lblThreads;
     private JTextField txtUrl, txtSaveDir;
+    private JCheckBox chkAnchor, chkImage;
     private JSpinner numThreads;
-    public  JButton btnChooseDir, btnFilter, btnGo;
-    public final String GET_LINKS_LABEL     = "Grab Links!",
-                        GETTING_LINKS_LABEL = "Grabbing Links ",
-                        GET_FILES_LABEL     = "Download Files!",
-                        GETTING_FILES_LABEL = "Downloading Files ",
-                        DONE_LABEL          = "Downloads Complete!";
+    public JButton btnBrowse, btnFilter, btnGo;
+    public final String GET_LINKS_LABEL = "Grab Links!",
+            GETTING_LINKS_LABEL = "Grabbing Links ",
+            GET_FILES_LABEL = "Download Files!",
+            GETTING_FILES_LABEL = "Downloading Files ",
+            DONE_LABEL = "Downloads Complete!";
 
     private int count;
     private FilterFrame filterFrame;
     private Status status = Status.UNINITIALIZED;
+    private WebpageCrawler.LinkType linkType = WebpageCrawler.LinkType.Both;
 
     private MimeTypeCollection mimeTypes;
 
-    // TODO: Add link type selection
-    // TODO: Add ThreadCount changer box
-
     public DownloadFrame() {
         super();
-
-        // TODO: Add thread count
 
         pnlMain = new JPanel(new GridBagLayout());
         pnlMain.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
@@ -48,6 +51,8 @@ public class DownloadFrame extends JFrame implements Observer {
         lblUrl.setHorizontalAlignment(SwingConstants.RIGHT);
         lblDir = new JLabel("Save Directory");
         lblDir.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblThreads = new JLabel("Threads");
+        lblThreads.setHorizontalAlignment(SwingConstants.RIGHT);
         txtUrl = new JTextField();
         txtUrl.setDocument(new PlainDocument() {
             @Override
@@ -62,14 +67,30 @@ public class DownloadFrame extends JFrame implements Observer {
         int coreCount = Runtime.getRuntime().availableProcessors();
         SpinnerModel sm = new SpinnerNumberModel(coreCount * 2, 1, coreCount * 16, 1);
         numThreads = new JSpinner(sm);
+        chkAnchor = new JCheckBox("Anchor tags <a/>", true);
+        chkImage = new JCheckBox("Image tags <img/>", true);
+        ActionListener chk = e -> {
+            if (chkImage.isSelected()) {
+                if (chkAnchor.isSelected())
+                    linkType = WebpageCrawler.LinkType.Both;
+                else
+                    linkType = WebpageCrawler.LinkType.Image;
+            } else if (chkAnchor.isSelected())
+                linkType = WebpageCrawler.LinkType.Anchor;
+            else
+                ((JCheckBox) e.getSource()).setSelected(true);
+        };
+        chkAnchor.addActionListener(chk);
+        chkImage.addActionListener(chk);
 
-        filterFrame = new FilterFrame(this);
-        btnFilter = new JButton("FileType Filter");
+        mimeTypes = MimeTypeCollection.WILDCARD;
+        filterFrame = new FilterFrame(this, mimeTypes);
+        btnFilter = new JButton("Filter");
         btnFilter.addActionListener(e -> {
             filterFrame.setVisible(true);
             mimeTypes = filterFrame.getMimeTypes();
         });
-        btnChooseDir = new JButton("Browse");
+        btnBrowse = new JButton("Browse");
         btnGo = new JButton(GET_LINKS_LABEL);
 
         listModel = new DownloadListModel();
@@ -85,58 +106,76 @@ public class DownloadFrame extends JFrame implements Observer {
         Insets bottomright = new Insets(0, 0, 8, 10);
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        c.insets = bottomright;
-        pnlTop.add(lblUrl, c);
-
-        c.gridx = 1;
-        c.weightx = 1;
-        c.gridwidth = 2;
-        c.insets = bottom;
-        pnlTop.add(txtUrl, c);
-
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = GridBagConstraints.RELATIVE;
         c.weightx = 0;
         c.gridwidth = 1;
         c.insets = bottomright;
+        pnlTop.add(lblUrl, c);
         pnlTop.add(lblDir, c);
+        pnlTop.add(lblThreads, c);
 
         c.gridx = 1;
         c.weightx = 1;
+        c.gridwidth = 3;
+        c.insets = bottom;
+        pnlTop.add(txtUrl, c);
+
+        c.gridwidth = 2;
         c.insets = bottomright;
         pnlTop.add(txtSaveDir, c);
 
-        c.gridx = 2;
+        c.gridx = 3;
         c.gridwidth = 1;
         c.weightx = 0;
         c.ipadx = 6;
         c.insets = bottom;
-        pnlTop.add(btnChooseDir, c);
+        pnlTop.add(btnBrowse, c);
 
-        GridBagConstraints bc = new GridBagConstraints();
-        bc.gridy = 0;
-        bc.gridx = GridBagConstraints.RELATIVE;
-        bc.fill = GridBagConstraints.BOTH;
+        JPanel pnlChecks = new JPanel(new GridBagLayout());
+        c.gridx = GridBagConstraints.RELATIVE;
+        c.gridy = 2;
+        c.weightx = 1;
+        c.gridwidth = 3;
+        pnlTop.add(pnlChecks, c);
 
-        bc.ipadx = 8;
-        bc.weightx = 0.1;
-        pnlButton.add(btnFilter, bc);
+        c = new GridBagConstraints();
+        c.gridx = GridBagConstraints.RELATIVE;
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0.7;
+        c.insets = new Insets(0, 0, 8, 24);
+        pnlChecks.add(numThreads, c);
 
-        bc.ipadx = 0;
-        bc.weightx = 0.35;
-        pnlButton.add(new JPanel(), bc);
+        c.weightx = 1;
+        pnlChecks.add(chkAnchor, c);
 
-        bc.ipadx = 8;
-        bc.weightx = 0.4;
-        pnlButton.add(btnGo, bc);
+        c.insets = bottom;
+        pnlChecks.add(chkImage, c);
 
-        bc.ipadx = 0;
-        bc.weightx = 0.6;
-        pnlButton.add(new JPanel(), bc);
+        c = new GridBagConstraints();
+        c.gridx = GridBagConstraints.RELATIVE;
+        c.fill = GridBagConstraints.BOTH;
+
+        c.ipadx = 8;
+        c.weightx = 0.05;
+        pnlButton.add(btnFilter, c);
+
+        c.ipadx = 0;
+        c.weightx = 0.225;
+        pnlButton.add(new JPanel(), c);
+
+        c.ipadx = 8;
+        c.weightx = 0.5;
+        pnlButton.add(btnGo, c);
+
+        c.ipadx = 0;
+        c.weightx = 0.225;
+        pnlButton.add(new JPanel(), c);
 
         c.weightx = 1;
         c.insets = none;
         c.ipadx = 0;
+        c.gridx = 0;
         c.gridy = GridBagConstraints.RELATIVE;
         c.fill = GridBagConstraints.BOTH;
         pnlMain.add(pnlTop, c);
@@ -149,9 +188,9 @@ public class DownloadFrame extends JFrame implements Observer {
         setPreferredSize(new Dimension(640, 800));
         pack();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        btnChooseDir.addActionListener(e -> {
+        btnBrowse.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setMultiSelectionEnabled(false);
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -164,13 +203,10 @@ public class DownloadFrame extends JFrame implements Observer {
                 choice = JOptionPane.showConfirmDialog(this, "Invalid directory.\nPlease try again!",
                         "Invalid Save Directory", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (choice == JOptionPane.OK_OPTION)
-                    btnChooseDir.doClick();
+                    btnBrowse.doClick();
             }
             if (dest != null)
                 txtSaveDir.setText(dest.getAbsolutePath());
-        });
-        btnFilter.addActionListener(e -> {
-            // TODO: Add btnFilter form here.
         });
     }
 

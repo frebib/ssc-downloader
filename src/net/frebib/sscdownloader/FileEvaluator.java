@@ -11,16 +11,14 @@ import java.net.URL;
 import java.util.*;
 
 public class FileEvaluator {
-    private final BatchExecutor<EvalTask, DownloadTask> executor;
-    private final MimeTypeCollection mimeTypes;
+    private MimeTypeCollection mimeTypes;
+    private BatchExecutor<EvalTask, DownloadTask> executor;
 
     private final List<EvalTask> evalTasks;
-    private final List<DownloadTask> results;
 
     public FileEvaluator(MimeTypeCollection mimes, int threadCount, Completion<List<DownloadTask>> done) {
         executor = new BatchExecutor<>(threadCount);
         executor.done(done);
-        results = new ArrayList<>();
         evalTasks = new ArrayList<>();
         mimeTypes = mimes;
     }
@@ -32,6 +30,9 @@ public class FileEvaluator {
         return this;
     }
 
+    public void setMimeTypes(MimeTypeCollection mimeTypes) {
+        this.mimeTypes = mimeTypes;
+    }
     public FileEvaluator start() throws InterruptedException {
         executor.start();
         return this;
@@ -42,7 +43,11 @@ public class FileEvaluator {
         return this;
     }
 
-    private class EvalTask extends Task<URL, DownloadTask> {
+    public List<EvalTask> getTasks() {
+        return evalTasks;
+    }
+
+    public class EvalTask extends Task<URL, DownloadTask> {
         private URL url;
         private File directory;
         private String mimeString, filename;
@@ -77,7 +82,7 @@ public class FileEvaluator {
             return null;
         }
 
-        private DownloadTask evalExtension() throws IllegalStateException {
+        public DownloadTask evalExtension() throws IllegalStateException {
             if (!fetched)
                 throw new IllegalStateException("Cannot evaluate file, it has not been fetched");
 

@@ -152,8 +152,8 @@ public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
         menu = new JPopupMenu();
         mi = new JMenuItem("Remove");
         mi.addActionListener(e -> {
-            if (collections.getSelectedItem() != null)
-                listModel.remove(collections.getSelectedIndex());
+            if (mimeList.getSelectedValue() != null)
+                listModel.remove(mimeList.getSelectedValue());
         });
         menu.add(mi);
         mi = new JMenuItem("Edit");
@@ -239,7 +239,7 @@ public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
             onMouseEvent(e);
         }
         private void onMouseEvent(MouseEvent e) {
-            if (e.isPopupTrigger()) {
+            if (e.isPopupTrigger() && !listModel.isEmpty()) {
                 MimeType mt = listModel.getElementAt(mimeList.locationToIndex(e.getPoint()));
                 mimeList.setSelectedValue(mt, false);
                 menu.show(mimeList, e.getX(), e.getY());

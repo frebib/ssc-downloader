@@ -112,7 +112,8 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     }
 
     public void pause() {
-        dlState = State.PAUSED;
+        if (dlState.getValue() > State.INITIALISED.getValue())
+            dlState = State.PAUSED;
     }
 
     public synchronized void resume() {

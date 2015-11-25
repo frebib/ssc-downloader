@@ -342,31 +342,10 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
         JPopupMenu menu = new JPopupMenu();
         JMenuItem mi;
 
-        mi = new JMenuItem("Filter Again");
-        mi.addActionListener(e -> {
-        });
-        if (!status.atLeast(Status.GRABBED))
-            mi.setEnabled(false);
-        menu.add(mi);
-
         mi = new JMenuItem("Fetch Again");
-        mi.addActionListener(e -> {
-        });
-        if (!status.atLeast(Status.GRABBED))
-            mi.setEnabled(false);
-        menu.add(mi);
-
-        mi = new JMenuItem("Reset Downloads");
-        mi.addActionListener(e -> {
-            if (status == Status.DOWNLOADING)
-                listModel.getList().stream().forEach(DownloadTask::cancel);
-
-            listModel.clear();
-            // TODO: Reset all downloads
-            //listModel.addAll();
-        });
-        if (!status.atLeast(Status.DOWNLOADING))
-            mi.setEnabled(false);
+        mi.addActionListener(e -> JOptionPane.showMessageDialog(this, "This option does nothing."));
+        //if (!status.atLeast(Status.GRABBED))
+        //    mi.setEnabled(false);
         menu.add(mi);
 
         menu.addSeparator();

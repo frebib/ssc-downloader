@@ -1,10 +1,13 @@
 package net.frebib.sscdownloader.concurrent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Worker<T, R> {
     private boolean cancelled = false, complete;
     private Thread thread;
     private Function<T, R> task;
-    private Completion<R> done;
+    private List<Completion<R>> done;
     private Progress prog;
     private Throwable error;
 
@@ -19,11 +22,14 @@ public class Worker<T, R> {
         thread.setName(name);
     }
     public Worker() {
+        this.done = new ArrayList<>();
+
         thread = new Thread(() -> {
             try {
                 R r = task.call(t);
-                if (!cancelled && done != null)
-                    done.onComplete(r);
+                if (!cancelled)
+                    for (Completion<R> handler : done)
+                        handler.onComplete(r);
                 complete = true;
             } catch (Exception ex) {
                 if (error != null)
@@ -41,7 +47,7 @@ public class Worker<T, R> {
         return this;
     }
     public Worker<T, R> done(Completion<R> done) {
-        this.done = done;
+        this.done.add(done);
         return this;
     }
 

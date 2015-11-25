@@ -330,6 +330,8 @@ public class DownloadFrame extends JFrame implements Observer {
 
         txtSaveDir.setText("");
         txtUrl.setText("");
+        numThreads.setValue(Runtime.getRuntime().availableProcessors() * 2);
+        filterFrame.setMimeTypes(MimeTypeCollection.WILDCARD);
         chkAnchor.setEnabled(true);
         chkImage.setEnabled(true);
     }

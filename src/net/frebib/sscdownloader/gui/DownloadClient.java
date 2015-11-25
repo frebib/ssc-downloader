@@ -465,7 +465,8 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
                 btnGo.setText(GET_LINKS_LABEL);
                 break;
             case GRABBING:
-                btnGo.setText(GETTING_LINKS_LABEL + listModel.getSize() + " of " + (count + listModel.getSize()));
+                btnGo.setText(GETTING_LINKS_LABEL + (count == 0 ? "" :
+                        listModel.getSize() + " of " + (count + listModel.getSize())));
                 break;
             case GRABBED:
                 btnGo.setText(GET_FILES_LABEL);

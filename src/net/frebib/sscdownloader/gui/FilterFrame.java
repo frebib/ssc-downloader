@@ -188,7 +188,7 @@ public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
 
     @Override
     public Component getListCellRendererComponent(JList<? extends MimeType> list, MimeType value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (cellHasFocus) setColors(HL_BG_COL, HL_FG_COL);
+        if (cellHasFocus || isSelected) setColors(HL_BG_COL, HL_FG_COL);
         else setColors(BG_COL, FG_COL);
 
         lblMime.setText(value.getMime());

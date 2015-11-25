@@ -62,7 +62,7 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
 
     @Override
     public Component getListCellRendererComponent(JList<? extends DownloadTask> l, DownloadTask dl, int i, boolean isSelected, boolean cellHasFocus) {
-        if (cellHasFocus) setColors(HL_BG_COL, HL_FG_COL);
+        if (cellHasFocus || isSelected) setColors(HL_BG_COL, HL_FG_COL);
         else setColors(BG_COL, FG_COL);
 
         downloadCol.setBackground(dl.getState().getCol());

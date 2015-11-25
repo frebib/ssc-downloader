@@ -55,6 +55,7 @@ public class ArrayListModel<T> extends AbstractListModel<T> {
 
     public void clear() {
         list.clear();
+        fireIntervalRemoved(this, 0, list.size());
     }
 
     public boolean isEmpty() {

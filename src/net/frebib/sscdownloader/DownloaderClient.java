@@ -42,7 +42,13 @@ public class DownloaderClient {
     }
 
     public void onGoClick(ActionEvent e) {
-        if (!listModel.isEmpty()) {
+        if (frame.getStatus() == DownloadFrame.Status.DOWNLOADED) {
+            downloader = null;
+            eval = null;
+            listModel.clear();
+            frame.reset();
+            return;
+        } else if(!listModel.isEmpty()) {
             try {
                 frame.updateStatus(DownloadFrame.Status.DOWNLOADING);
                 downloader.start();
@@ -79,7 +85,6 @@ public class DownloaderClient {
             else
                 return;
         }
-
 
         frame.setURL(webpage.toString());
 

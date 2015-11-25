@@ -29,7 +29,7 @@ public class DownloadFrame extends JFrame implements Observer {
             GETTING_LINKS_LABEL = "Grabbing Links ",
             GET_FILES_LABEL = "Download Files!",
             GETTING_FILES_LABEL = "Downloading Files ",
-            DONE_LABEL = "Downloads Complete!";
+            DONE_LABEL = "Complete! Click to reset...";
 
     private int count;
     private FilterFrame filterFrame;
@@ -276,6 +276,17 @@ public class DownloadFrame extends JFrame implements Observer {
                 btnGo.setText(DONE_LABEL);
                 break;
         }
+    }
+
+    public void reset() {
+        count = 0;
+        updateStatus(Status.UNINITIALIZED);
+        linkType = WebpageCrawler.LinkType.Both;
+
+        txtSaveDir.setText("");
+        txtUrl.setText("");
+        chkAnchor.setEnabled(true);
+        chkImage.setEnabled(true);
     }
 
     public enum Status {

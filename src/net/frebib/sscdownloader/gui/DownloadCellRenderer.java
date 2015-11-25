@@ -71,6 +71,18 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
         return this;
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        Dimension size = super.getPreferredSize();
+        size.width = getParent().getWidth();
+        return size;
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return getPreferredSize();
+    }
+
     private void setColors(Color bg, Color fg) {
         setBackground(bg);
         textPanel.setBackground(bg);

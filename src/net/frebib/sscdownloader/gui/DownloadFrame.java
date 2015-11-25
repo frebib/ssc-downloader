@@ -99,6 +99,7 @@ public class DownloadFrame extends JFrame implements Observer {
         listModel.setList(dlList);
         scroller = new JScrollPane(dlList);
         scroller.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
+        scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         GridBagConstraints c = new GridBagConstraints();
         Insets none = c.insets;

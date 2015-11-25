@@ -62,18 +62,23 @@ public class DownloadTask extends Task<URL, DownloadTask> {
 
             setState(State.DOWNLOADING);
 
-            while (dlState == State.DOWNLOADING) {
-                int chunk = (int) Math.min(CHUNK_SIZE, size - bytes);
-                byte[] buffer = new byte[chunk];
+            synchronized (this) {
+                while (dlState == State.DOWNLOADING || dlState == State.PAUSED) {
+                    if (dlState == State.PAUSED)
+                        wait();
 
-                int count = is.read(buffer);
-                if (count == -1) {              // At EOF
-                    setState(State.COMPLETED);
-                    break;
-                } else {                        // Write bytes to file
-                    fs.write(buffer, 0, count);
-                    bytes += count;
-                    setProgress((float) bytes / size * 100);
+                    int chunk = (int) Math.min(CHUNK_SIZE, size - bytes);
+                    byte[] buffer = new byte[chunk];
+
+                    int count = is.read(buffer);
+                    if (count == -1) {              // At EOF
+                        setState(State.COMPLETED);
+                        break;
+                    } else {                        // Write bytes to file
+                        fs.write(buffer, 0, count);
+                        bytes += count;
+                        setProgress((float) bytes / size * 100);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -104,6 +109,15 @@ public class DownloadTask extends Task<URL, DownloadTask> {
         progress = percent;
         setChanged();
         notifyObservers(percent);
+    }
+
+    public void pause() {
+        dlState = State.PAUSED;
+    }
+
+    public synchronized void resume() {
+        dlState = State.DOWNLOADING;
+        notifyAll();
     }
 
     public void cancel() {

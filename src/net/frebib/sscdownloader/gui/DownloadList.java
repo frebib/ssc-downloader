@@ -36,7 +36,15 @@ public class DownloadList extends JList<DownloadTask> implements KeyListener {
 
         menu.addSeparator();
 
-        mi = new JMenuItem("Cancel", UIManager.getIcon("InternalFrame.closeIcon"));
+        boolean paused = task.getState() == DownloadTask.State.PAUSED;
+        mi = new JMenuItem(paused ? "Resume" : "Pause");
+        mi.addActionListener(e -> {
+            if (paused) task.resume();
+            else task.pause();
+        });
+        menu.add(mi);
+
+        mi = new JMenuItem("Cancel");
         mi.addActionListener(e -> task.cancel());
         menu.add(mi);
 

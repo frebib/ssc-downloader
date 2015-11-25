@@ -24,7 +24,7 @@ public class DownloadFrame extends JFrame implements Observer {
     private JTextField txtUrl, txtSaveDir;
     private JCheckBox chkAnchor, chkImage;
     private JSpinner numThreads;
-    public JButton btnBrowse, btnFilter, btnGo;
+    public JButton btnBrowse, btnFilter, btnGo, btnMenu;
     public final String GET_LINKS_LABEL = "Grab Links!",
             GETTING_LINKS_LABEL = "Grabbing Links ",
             GET_FILES_LABEL = "Download Files!",
@@ -92,6 +92,8 @@ public class DownloadFrame extends JFrame implements Observer {
         });
         btnBrowse = new JButton("Browse");
         btnGo = new JButton(GET_LINKS_LABEL);
+        btnMenu = new JButton("\uF0C9");
+        btnMenu.addMouseListener(this);
 
         listModel = new DownloadListModel();
         dlList = new DownloadList(listModel);
@@ -170,8 +172,12 @@ public class DownloadFrame extends JFrame implements Observer {
         pnlButton.add(btnGo, c);
 
         c.ipadx = 0;
-        c.weightx = 0.4;
+        c.weightx = 0.25;
         pnlButton.add(new JPanel(), c);
+
+        c.ipadx = 8;
+        c.weightx = 0;
+        pnlButton.add(btnMenu, c);
 
         c.weightx = 1;
         c.insets = none;
@@ -212,6 +218,45 @@ public class DownloadFrame extends JFrame implements Observer {
     }
 
     @Override
+    public void mouseClicked(MouseEvent ev) {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem mi;
+
+        mi = new JMenuItem("Filter Again");
+        mi.addActionListener(e -> {
+        });
+        if (!status.atLeast(Status.GRABBED))
+            mi.setEnabled(false);
+        menu.add(mi);
+
+        mi = new JMenuItem("Fetch Again");
+        mi.addActionListener(e -> {
+        });
+        if (!status.atLeast(Status.GRABBED))
+            mi.setEnabled(false);
+        menu.add(mi);
+
+        mi = new JMenuItem("Reset Downloads");
+        mi.addActionListener(e -> {
+        });
+        if (!status.atLeast(Status.DOWNLOADING))
+            mi.setEnabled(false);
+        menu.add(mi);
+
+        menu.addSeparator();
+
+        mi = new JMenuItem("Reset");
+        mi.addActionListener(e -> reset());
+        menu.add(mi);
+
+        menu.show(btnMenu, ev.getX(), ev.getY());
+    }
+
+    public void mousePressed(MouseEvent e) { }
+    public void mouseReleased(MouseEvent e) { }
+    public void mouseEntered(MouseEvent e) { }
+    public void mouseExited(MouseEvent e) { }
+
     public void update(Observable o, Object arg) {
         updateStatus();
     }

@@ -162,7 +162,7 @@ public class DownloadFrame extends JFrame implements Observer {
         pnlButton.add(btnFilter, c);
 
         c.ipadx = 0;
-        c.weightx = 0.225;
+        c.weightx = 0.2;
         pnlButton.add(new JPanel(), c);
 
         c.ipadx = 8;
@@ -170,7 +170,7 @@ public class DownloadFrame extends JFrame implements Observer {
         pnlButton.add(btnGo, c);
 
         c.ipadx = 0;
-        c.weightx = 0.225;
+        c.weightx = 0.4;
         pnlButton.add(new JPanel(), c);
 
         c.weightx = 1;

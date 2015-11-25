@@ -64,7 +64,7 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
         else setColors(BG_COL, FG_COL);
 
         downloadCol.setBackground(dl.getState().getCol());
-        filename.setText(dl.getURL());
+        filename.setText(dl.getURL().getFile());
         filepath.setText("> " + dl.getFilepath());
         progress.setValue((int) dl.getProgress());
 

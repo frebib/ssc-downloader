@@ -128,8 +128,8 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     public String getFilepath() {
         return file.getAbsolutePath();
     }
-    public String getURL() {
-        return url.toString();
+    public URL getURL() {
+        return url;
     }
 
     public enum State {

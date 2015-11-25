@@ -16,7 +16,9 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     private URL url;
     private State dlState;
 
-    private float progress = 0f;
+    private long size;
+    private long bytes;
+    private float progress;
 
     public DownloadTask(URL url, String filename, File path) {
         super(url);
@@ -47,8 +49,8 @@ public class DownloadTask extends Task<URL, DownloadTask> {
                 setState(State.ERROR);
                 return this;
             }
-            int len = conn.getContentLength();
-            if (len < 1) {
+            size = conn.getContentLength();
+            if (size < 1) {
                 setState(State.ERROR);
                 return this;
             }
@@ -59,9 +61,8 @@ public class DownloadTask extends Task<URL, DownloadTask> {
 
             setState(State.DOWNLOADING);
 
-            int downloaded = 0;
             while (dlState == State.DOWNLOADING) {
-                int chunk = Math.min(CHUNK_SIZE, len - downloaded);
+                int chunk = (int) Math.min(CHUNK_SIZE, size - bytes);
                 byte[] buffer = new byte[chunk];
 
                 int count = is.read(buffer);
@@ -70,8 +71,8 @@ public class DownloadTask extends Task<URL, DownloadTask> {
                     break;
                 } else {                        // Write bytes to file
                     fs.write(buffer, 0, count);
-                    downloaded += count;
-                    setProgress((float) downloaded / len * 100);
+                    bytes += count;
+                    setProgress((float) bytes / size * 100);
                 }
             }
         } catch (Exception e) {
@@ -107,6 +108,13 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     public void cancel() {
         DownloaderClient.LOG.warning("Download cancelled: " + this.hashCode());
         setState(State.CANCELLED);
+    }
+
+    public long getBytes() {
+        return bytes;
+    }
+    public long getSize() {
+        return size;
     }
     public float getProgress() {
         return progress;

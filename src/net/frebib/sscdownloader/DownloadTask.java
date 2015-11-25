@@ -94,7 +94,7 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     }
 
     private void setState(State state) {
-        if (state == State.CANCELLED && dlState.getValue() > 4)
+        if (state == State.CANCELLED && dlState.getValue() > State.PAUSED.getValue())
             return;
         dlState = state;
         setChanged();
@@ -137,9 +137,10 @@ public class DownloadTask extends Task<URL, DownloadTask> {
         UNINITIALISED(new Color(30, 80, 170), 1),
         INITIALISED(new Color(255, 255, 0), 2),
         DOWNLOADING(new Color(255, 115, 0), 4),
-        COMPLETED(new Color(0, 115, 0), 8),
-        CANCELLED(new Color(100, 100, 100), 16),
-        ERROR(new Color(255, 0, 0), 32);
+        PAUSED(new Color(200, 0, 200), 8),
+        COMPLETED(new Color(0, 115, 0), 16),
+        CANCELLED(new Color(100, 100, 100), 32),
+        ERROR(new Color(255, 0, 0), 64);
 
         private Color col;
         private short v;

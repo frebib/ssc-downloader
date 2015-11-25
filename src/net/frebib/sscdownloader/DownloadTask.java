@@ -121,10 +121,10 @@ public class DownloadTask extends Task<URL, DownloadTask> {
 
     public enum State {
         UNINITIALISED(new Color(30, 80, 170), 1),
-        INITIALISED(new Color(255, 115, 0), 4),
-        DOWNLOADING(new Color(255, 255, 0), 2),
-        COMPLETED(new Color(0, 135, 0), 8),
-        CANCELLED(new Color(140, 140, 140), 16),
+        INITIALISED(new Color(255, 255, 0), 4),
+        DOWNLOADING(new Color(255, 115, 0), 2),
+        COMPLETED(new Color(0, 115, 0), 8),
+        CANCELLED(new Color(100, 100, 100), 16),
         ERROR(new Color(255, 0, 0), 32);
 
         private Color col;

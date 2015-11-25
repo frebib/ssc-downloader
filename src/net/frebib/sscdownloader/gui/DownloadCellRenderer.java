@@ -75,11 +75,14 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
     }
 
     private String getProgressText(DownloadTask task) {
+        String progress = String.format("%.1f%%",task.getProgress());
         switch (task.getState()) {
             case UNINITIALISED:
                 return "Waiting";
             case INITIALISED:
                 return "Initialising";
+            case PAUSED:
+                return "Paused at " + progress;
             case COMPLETED:
                 return "Complete";
             case CANCELLED:
@@ -87,7 +90,7 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
             case ERROR:
                 return "Error";
             default:
-                return String.format("%.1f%%",task.getProgress());
+                return progress;
         }
     }
 

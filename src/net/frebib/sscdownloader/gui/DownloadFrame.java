@@ -337,10 +337,20 @@ public class DownloadFrame extends JFrame implements Observer {
     }
 
     public enum Status {
-        UNINITIALIZED,
-        GRABBING,
-        GRABBED,
-        DOWNLOADING,
-        DOWNLOADED
+        UNINITIALIZED(1),
+        GRABBING(2),
+        GRABBED(3),
+        DOWNLOADING(4),
+        DOWNLOADED(5);
+
+        private byte val;
+
+        Status(int val) {
+            this.val = (byte) val;
+        }
+
+        public boolean atLeast(Status status) {
+            return this.val >= status.val;
+        }
     }
 }

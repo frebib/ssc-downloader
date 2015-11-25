@@ -224,6 +224,11 @@ public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
         return new MimeTypeCollection(listModel.getList());
     }
 
+    public void setMimeTypes(MimeTypeCollection mimeTypes) {
+        listModel.clear();
+        listModel.addAll(mimeTypes.getMimes());
+    }
+
     private class RightClickHandler extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {

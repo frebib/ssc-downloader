@@ -102,17 +102,18 @@ public class DownloaderClient {
         });
 
         // Fetch links and parse them
+
+        frame.btnGo.setEnabled(false);
+        frame.updateStatus(DownloadFrame.Status.GRABBING);
         new Worker<URL, List<URL>>()
                 .todo(url -> WebpageCrawler.parse(url, WebpageCrawler.LinkType.Both, 30000))
                 .done(links -> {
                     frame.setDownloadCount(links.size());
-                    frame.updateStatus(DownloadFrame.Status.GRABBING);
                     links.stream().forEach(url ->
                             eval.add(url, dir, dl -> {
                                 listModel.addElement(dl);
                                 frame.decDownloadCount();
                             }));
-                    frame.btnGo.setEnabled(false);
                     eval.start();
                 }).error(ex -> {
                     String strace = ex.getMessage() +

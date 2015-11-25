@@ -38,6 +38,12 @@ public class DownloadListModel extends DefaultListModel<DownloadTask> implements
         int index = indexOf(o);
         if (index < 0) return;
 
+        lastIndex = Math.max(index, lastIndex);
+
+        DownloadTask task = (DownloadTask)o;
+        if (task.getState() == DownloadTask.State.INITIALISED)
+            SwingUtilities.invokeLater(() -> list.ensureIndexIsVisible(lastIndex));
+
         fireContentsChanged(o, index, index);
     }
 }

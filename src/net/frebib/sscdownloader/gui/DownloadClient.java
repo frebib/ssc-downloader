@@ -348,6 +348,18 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
         JPopupMenu menu = new JPopupMenu();
         JMenuItem mi;
 
+        mi = new JMenuItem("Cancel All");
+        mi.addActionListener(e -> listModel.getList().stream().forEach(DownloadTask::cancel));
+        if (status != Status.DOWNLOADING)
+            mi.setEnabled(false);
+        menu.add(mi);
+
+        mi = new JMenuItem("Pause All");
+        mi.addActionListener(e -> listModel.getList().stream().forEach(DownloadTask::pause));
+        if (status != Status.DOWNLOADING)
+            mi.setEnabled(false);
+        menu.add(mi);
+
         mi = new JMenuItem("Fetch Again");
         mi.addActionListener(e -> JOptionPane.showMessageDialog(this, "This option does nothing."));
         //if (!status.atLeast(Status.GRABBED))

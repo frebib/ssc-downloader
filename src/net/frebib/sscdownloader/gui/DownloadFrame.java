@@ -9,12 +9,15 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-public class DownloadFrame extends JFrame implements Observer {
+public class DownloadFrame extends JFrame implements Observer, MouseListener {
     private JPanel pnlMain, pnlTop, pnlButton;
     private JScrollPane scroller;
     private JList<DownloadTask> dlList;

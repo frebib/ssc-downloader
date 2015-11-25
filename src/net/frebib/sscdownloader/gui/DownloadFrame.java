@@ -58,7 +58,7 @@ public class DownloadFrame extends JFrame implements Observer {
             @Override
             public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
                 String newStr = new StringBuilder(txtUrl.getText()).insert(offs, str).toString();
-                if (newStr.matches("^([!#$&-;=?-\\[\\]_a-z~]|%[^0-9a-fA-F]{2})+$"))
+                if (newStr.matches("^([!#$&-;=?-\\[\\]_a-z~]|%[0-9a-fA-F]{2})+$"))
                     super.insertString(offs, str, a);
             }
         });

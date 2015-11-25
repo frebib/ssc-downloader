@@ -150,7 +150,7 @@ public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
 
         JMenuItem mi;
         menu = new JPopupMenu();
-        mi = new JMenuItem("Remove", UIManager.getIcon("InternalFrame.closeIcon"));
+        mi = new JMenuItem("Remove");
         mi.addActionListener(e -> {
             if (collections.getSelectedItem() != null)
                 listModel.remove(collections.getSelectedIndex());

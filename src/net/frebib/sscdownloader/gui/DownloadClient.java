@@ -1,8 +1,12 @@
 package net.frebib.sscdownloader.gui;
 
 import net.frebib.sscdownloader.DownloadTask;
+import net.frebib.sscdownloader.FileEvaluator;
 import net.frebib.sscdownloader.MimeTypeCollection;
 import net.frebib.sscdownloader.WebpageCrawler;
+import net.frebib.sscdownloader.concurrent.BatchExecutor;
+import net.frebib.sscdownloader.concurrent.Worker;
+import net.frebib.util.Log;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -14,10 +18,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.Observable;
-import java.util.Observer;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
-public class DownloadFrame extends JFrame implements Observer, MouseListener {
+public class DownloadClient extends JFrame implements Observer, MouseListener {
+    public static final Log LOG = new Log(Level.FINEST)
+            .setLogOutput(new SimpleDateFormat("'log/mailclient'yyyy-MM-dd hh-mm-ss'.log'")
+                    .format(new Date()));
+
     private JPanel pnlMain, pnlTop, pnlButton;
     private JScrollPane scroller;
     private JList<DownloadTask> dlList;
@@ -35,13 +48,18 @@ public class DownloadFrame extends JFrame implements Observer, MouseListener {
             DONE_LABEL = "Complete! Click to reset...";
 
     private int count;
-    private FilterFrame filterFrame;
     private Status status = Status.UNINITIALIZED;
     private WebpageCrawler.LinkType linkType = WebpageCrawler.LinkType.Both;
 
     private MimeTypeCollection mimeTypes;
+    private FilterFrame filterFrame;
+    private FileEvaluator eval;
+    private BatchExecutor<DownloadTask, DownloadTask> downloader;
 
-    public DownloadFrame() {
+    /**
+     * Initialise the frame and create all components on the form
+     */
+    public DownloadClient() {
         super();
 
         pnlMain = new JPanel(new GridBagLayout());
@@ -95,6 +113,7 @@ public class DownloadFrame extends JFrame implements Observer, MouseListener {
         });
         btnBrowse = new JButton("Browse");
         btnGo = new JButton(GET_LINKS_LABEL);
+        btnGo.addActionListener(this::onGoClick);
         btnMenu = new JButton("\uF0C9");
         btnMenu.addMouseListener(this);
 
@@ -220,6 +239,104 @@ public class DownloadFrame extends JFrame implements Observer, MouseListener {
         });
     }
 
+    /**
+     * An event handler for the main 'go' button that initiates downloads
+     * @param e The ActionEvent provided by the control
+     */
+    public void onGoClick(ActionEvent e) {
+        if (status == DownloadClient.Status.DOWNLOADED) {
+            downloader = null;
+            eval = null;
+            listModel.clear();
+            reset();
+            return;
+        } else if(!listModel.isEmpty()) {
+            try {
+                updateStatus(DownloadClient.Status.DOWNLOADING);
+                downloader.start();
+            } catch (InterruptedException ex) {
+                DownloadClient.LOG.exception(ex);
+            }
+            return;
+        }
+
+        // Validate URL
+        URL webpage;
+        try {
+            webpage = new URL(getURL());
+        } catch (MalformedURLException ex) {
+            JOptionPane.showMessageDialog(this, "Invalid URL",
+                    "The webpage you entered doesn't appear to be valid.\n\n" +
+                            ex.getMessage(), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // Validate Directory
+        String dirStr = getSaveDir();
+        if (dirStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a directory",
+                    "Invalid Directory", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Ask about creating the output directory
+        File dir = new File(dirStr);
+        if (!dir.exists()) {
+            int result = JOptionPane.showConfirmDialog(this, "The directory doesn't exist.\nDo you want to create it?",
+                    "Directory doesn't exist", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (result == JOptionPane.OK_OPTION)
+                dir.mkdirs();
+            else
+                return;
+        }
+
+        setURL(webpage.toString());
+
+        // Create a FileEvaluator object and
+        // define what to do when it completes
+        final int threads = getThreadCount();
+        MimeTypeCollection mimes = mimeTypes;
+        eval = new FileEvaluator(mimes, threads, tasks -> {
+            btnGo.setEnabled(true);
+            updateStatus(DownloadClient.Status.GRABBED);
+            setDownloadCount(0);
+
+            tasks = tasks.stream()
+                    .filter(x -> x != null)
+                    .collect(Collectors.toList());
+            tasks.stream().forEach(t ->
+                    t.done(r -> incDownloadCount()));
+
+            downloader = new BatchExecutor<>(getThreadCount());
+            downloader.done(res -> updateStatus(DownloadClient.Status.DOWNLOADED));
+            downloader.addAll(tasks);
+        });
+
+        // Fetch links and parse them
+        btnGo.setEnabled(false);
+        updateStatus(DownloadClient.Status.GRABBING);
+        new Worker<URL, List<URL>>()
+                .todo(url -> WebpageCrawler.parse(url, WebpageCrawler.LinkType.Both, 30000))
+                .done(links -> {
+                    setDownloadCount(links.size());
+                    links.stream().forEach(url ->
+                            eval.add(url, dir, dl -> {
+                                listModel.add(dl);
+                                decDownloadCount();
+                            }));
+                    eval.start();
+                }).error(ex -> {
+            String strace = ex.getMessage() +
+                    Arrays.stream(ex.getStackTrace())
+                            .limit(5)
+                            .map(StackTraceElement::toString)
+                            .collect(Collectors.joining("\n"));
+
+            JOptionPane.showMessageDialog(this, "Failed to Connect\n"+ ex.getMessage() + strace,
+                    "Failed to Connect", JOptionPane.INFORMATION_MESSAGE);
+        })
+                .start(webpage);
+    }
+
     @Override
     public void mouseClicked(MouseEvent ev) {
         JPopupMenu menu = new JPopupMenu();
@@ -241,6 +358,12 @@ public class DownloadFrame extends JFrame implements Observer, MouseListener {
 
         mi = new JMenuItem("Reset Downloads");
         mi.addActionListener(e -> {
+            if (status == Status.DOWNLOADING)
+                listModel.getList().stream().forEach(DownloadTask::cancel);
+
+            listModel.clear();
+            // TODO: Reset all downloads
+            //listModel.addAll();
         });
         if (!status.atLeast(Status.DOWNLOADING))
             mi.setEnabled(false);
@@ -260,28 +383,61 @@ public class DownloadFrame extends JFrame implements Observer, MouseListener {
     public void mouseEntered(MouseEvent e) { }
     public void mouseExited(MouseEvent e) { }
 
+    /**
+     * Handler method for updating the download
+     * status when called by an observable
+     * @param o the Observable object that called the change
+     * @param arg argument passed by the Observable
+     */
+    @Override
     public void update(Observable o, Object arg) {
         updateStatus();
     }
 
+    /**
+     * Gets the MimeTypeCollection stored by the form
+     * @return a MimeTypeCollection
+     */
     public MimeTypeCollection getMimeTypeCollection() {
         return mimeTypes;
     }
+
+    /**
+     * Gets the DownloadStatus
+     * @return the Status
+     */
     public Status getStatus() {
         return status;
     }
+
+    /**
+     * Gets the fully qualified URL from the Text Field on the form
+     * @return the URL on the form
+     */
     public String getURL() {
         String url = txtUrl.getText();
         if (url.length() >= 8 && !url.substring(0, 8).contains("://"))
             url = "http://" + url;
         return url;
     }
+
+    /**
+     * Gets the location to save files to
+     * from the Text Field os the form
+     * @return the save location from the form
+     */
     public String getSaveDir() {
         return txtSaveDir.getText();
     }
+
+    /*
+     * Gets the amount of threads specified on the form
+     * @return the thread count
+     */
     public int getThreadCount() {
         return (int) numThreads.getModel().getValue();
     }
+
     public DownloadListModel getListModel() {
         return listModel;
     }
@@ -337,6 +493,18 @@ public class DownloadFrame extends JFrame implements Observer, MouseListener {
         filterFrame.setMimeTypes(MimeTypeCollection.WILDCARD);
         chkAnchor.setEnabled(true);
         chkImage.setEnabled(true);
+    }
+
+    /**
+     * Main entry point into the program.
+     * @param args
+     */
+    public static void main(String[] args) {
+        LOG.info("URL: https://lsd-25.ru/uploads/Various%20Artists%20-%20Drum%20%26%20Bass%20Arena%202014%20%20%282014%29/");
+        LOG.info("Downloader initialised");
+
+        DownloadClient client = new DownloadClient();
+        client.setVisible(true);
     }
 
     public enum Status {

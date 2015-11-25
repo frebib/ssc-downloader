@@ -1,6 +1,6 @@
 package net.frebib.sscdownloader.concurrent;
 
-import net.frebib.sscdownloader.DownloaderClient;
+import net.frebib.sscdownloader.gui.DownloadClient;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +66,7 @@ public class BatchExecutor<T extends Task<?, R>, R> implements Completion<R> {
                     try {
                         d.onComplete(results);
                     } catch (Exception e) {
-                        DownloaderClient.LOG.exception(e);
+                        DownloadClient.LOG.exception(e);
                     }
             });
         }

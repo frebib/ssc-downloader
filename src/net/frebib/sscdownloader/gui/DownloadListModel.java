@@ -1,12 +1,8 @@
 package net.frebib.sscdownloader.gui;
 
 import net.frebib.sscdownloader.DownloadTask;
-import net.frebib.sscdownloader.DownloaderClient;
 
 import javax.swing.*;
-import javax.swing.event.ListDataListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 

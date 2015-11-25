@@ -3,6 +3,7 @@ package net.frebib.sscdownloader;
 import net.frebib.sscdownloader.concurrent.BatchExecutor;
 import net.frebib.sscdownloader.concurrent.Completion;
 import net.frebib.sscdownloader.concurrent.Task;
+import net.frebib.sscdownloader.gui.DownloadClient;
 
 import java.io.File;
 import java.net.HttpURLConnection;
@@ -56,7 +57,7 @@ public class FileEvaluator {
         @Override
         public DownloadTask call(URL url) throws Exception {
             try {
-                DownloaderClient.LOG.finer("Evaluating url: \"" + url.toString() + "\"");
+                DownloadClient.LOG.finer("Evaluating url: \"" + url.toString() + "\"");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("HEAD");
                 conn.connect();
@@ -71,7 +72,7 @@ public class FileEvaluator {
 
                 return evalExtension();
             } catch (Exception e) {
-                DownloaderClient.LOG.exception(e);
+                DownloadClient.LOG.exception(e);
             }
             return null;
         }
@@ -99,7 +100,7 @@ public class FileEvaluator {
                 }
 
                 if (ext.isEmpty())     // Otherwise have no extension
-                    DownloaderClient.LOG.warning("File \"" + filename + "\" has no extension with mime: " + mimeString);
+                    DownloadClient.LOG.warning("File \"" + filename + "\" has no extension with mime: " + mimeString);
             } else
                 return null;    // Return null if the mime type isn't valid
 

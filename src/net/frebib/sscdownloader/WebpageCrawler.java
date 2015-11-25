@@ -1,5 +1,6 @@
 package net.frebib.sscdownloader;
 
+import net.frebib.sscdownloader.gui.DownloadClient;
 import org.jsoup.Connection;
 import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
@@ -46,12 +47,12 @@ public class WebpageCrawler {
             if (address.startsWith("//") && parent != null) // Add missing protocol
                 address = parent.split("//")[0] + address;  // if link is relative
 
-            DownloaderClient.LOG.finest(address);
+            DownloadClient.LOG.finest(address);
 
             return new URL(address);
         } catch (MalformedURLException e) {
             if (address.isEmpty())
-                DownloaderClient.LOG.severe("Address is not valid: " + address);
+                DownloadClient.LOG.severe("Address is not valid: " + address);
         }
         return null;
     }

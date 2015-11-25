@@ -1,6 +1,6 @@
 package net.frebib.sscdownloader.concurrent;
 
-import net.frebib.sscdownloader.DownloaderClient;
+import net.frebib.sscdownloader.gui.DownloadClient;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -27,7 +27,7 @@ public abstract class Task<T, R> extends Observable implements Callable<R>, Func
                 if (d != null)
                     d.onComplete(r);
             } catch (Exception e) {
-                DownloaderClient.LOG.exception(e);
+                DownloadClient.LOG.exception(e);
             }
         });
         return r;

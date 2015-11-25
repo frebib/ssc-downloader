@@ -1,6 +1,7 @@
 package net.frebib.sscdownloader;
 
 import net.frebib.sscdownloader.concurrent.Task;
+import net.frebib.sscdownloader.gui.DownloadClient;
 
 import java.awt.*;
 import java.io.File;
@@ -33,7 +34,7 @@ public class DownloadTask extends Task<URL, DownloadTask> {
         if (dlState == State.CANCELLED)
             return this;
 
-        DownloaderClient.LOG.fine("Download starting for: " + file.getCanonicalPath());
+        DownloadClient.LOG.fine("Download starting for: " + file.getCanonicalPath());
         setState(State.INITIALISED);
 
         HttpURLConnection conn;
@@ -77,7 +78,7 @@ public class DownloadTask extends Task<URL, DownloadTask> {
             }
         } catch (Exception e) {
             setState(State.ERROR);
-            DownloaderClient.LOG.exception(e);
+            DownloadClient.LOG.exception(e);
         } finally {
             try {
                 if (fs != null)
@@ -85,10 +86,10 @@ public class DownloadTask extends Task<URL, DownloadTask> {
                 if (is != null)
                     is.close();
             } catch (Exception e) {
-                DownloaderClient.LOG.exception(e);
+                DownloadClient.LOG.exception(e);
             }
         }
-        DownloaderClient.LOG.fine("Download finished for: " + file.getCanonicalPath());
+        DownloadClient.LOG.fine("Download finished for: " + file.getCanonicalPath());
         return this;
     }
 
@@ -106,7 +107,7 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     }
 
     public void cancel() {
-        DownloaderClient.LOG.warning("Download cancelled: " + this.hashCode());
+        DownloadClient.LOG.warning("Download cancelled: " + this.hashCode());
         setState(State.CANCELLED);
     }
 

@@ -3,10 +3,7 @@ package net.frebib.sscdownloader.gui;
 import net.frebib.sscdownloader.DownloadTask;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class DownloadList extends JList<DownloadTask> implements KeyListener {
     public DownloadList(ListModel<DownloadTask> model) {

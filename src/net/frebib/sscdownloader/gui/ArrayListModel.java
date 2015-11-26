@@ -26,7 +26,7 @@ public class ArrayListModel<T> extends AbstractListModel<T> {
 
     public void add(int index, T e) {
         list.add(index, e);
-        fireIntervalAdded(e, index, index);
+        fireIntervalAdded(e, index, list.size());
     }
     public void addAll(Collection<? extends T> c) {
         list.addAll(c);

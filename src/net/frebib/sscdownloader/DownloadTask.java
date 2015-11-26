@@ -117,6 +117,7 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     }
 
     public synchronized void resume() {
+        if (dlState !=  State.PAUSED) return;
         dlState = State.DOWNLOADING;
         notifyAll();
     }

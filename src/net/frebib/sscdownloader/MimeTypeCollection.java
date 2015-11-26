@@ -13,22 +13,31 @@ public class MimeTypeCollection {
             .add(MimeType.WILDCARD);
 
     public static final MimeTypeCollection COMMON_IMAGES = new MimeTypeCollection("Common Image Formats")
-            .add(new MimeType("image/gif",  "gif"))
-            .add(new MimeType("image/png",  "png"))
-            .add(new MimeType("image/bmp",  "bmp", "bm"))
-            .add(new MimeType("image/tiff", "tiff", "tif"))
-            .add(new MimeType("image/jpeg", "jpg", "jpe", "jpeg", "jps", "jfif"));
+            .add(MimeType.fromDelimitedExts("image/gif",  "gif"))
+            .add(MimeType.fromDelimitedExts("image/png",  "png"))
+            .add(MimeType.fromDelimitedExts("image/bmp",  "bmp bm"))
+            .add(MimeType.fromDelimitedExts("image/tiff", "tiff tif"))
+            .add(MimeType.fromDelimitedExts("image/jpeg", "jpg jpe jpeg jps jfif"));
 
     public static final MimeTypeCollection COMMON_TEXTS = new MimeTypeCollection("Common Text Formats")
-            .add(new MimeType("text/plain", "txt", "text", "log", "list"))
-            .add(new MimeType("text/html",  "html", "htm", "php", "htmls", "xhtml", "htx", "shtml"))
-            .add(new MimeType("text/xml",   "xml"))
-            .add(new MimeType("text/richtext",   "rt", "rtf", "rtx"))
-            .add(new MimeType("text/ecmascript", "js"))
-            .add(new MimeType("text/javascript", "js"));
+            .add(MimeType.fromDelimitedExts("text/plain", "txt text log list"))
+            .add(MimeType.fromDelimitedExts("text/html",  "html htm php htmls xhtml htx shtml"))
+            .add(MimeType.fromDelimitedExts("text/xml",   "xml"))
+            .add(MimeType.fromDelimitedExts("text/richtext",   "rt rtf rtx"))
+            .add(MimeType.fromDelimitedExts("text/ecmascript", "js"))
+            .add(MimeType.fromDelimitedExts("text/javascript", "js"));
+    public static final MimeTypeCollection COMMON_AUDIO = new MimeTypeCollection("Common Audio Formats")
+            .add(MimeType.fromDelimitedExts("audio/mpeg",  "mp3 mp2 m2a mpa mpg"))
+            .add(MimeType.fromDelimitedExts("audio/aiff",  "aiff aif aifc"))
+            .add(MimeType.fromDelimitedExts("audio/midi",  "mid midi"))
+            .add(MimeType.fromDelimitedExts("audio/basic", "au snd"))
+            .add(MimeType.fromDelimitedExts("audio/mpeg3", "mp3"))
+            .add(MimeType.fromDelimitedExts("audio/wav",   "wav"))
+            .add(MimeType.fromDelimitedExts("audio/flac",  "flac"))
+            .add(MimeType.fromDelimitedExts("audio/ogg",   "ogg spx"));
 
     static {
-        DEF_COLLECTIONS = new MimeTypeCollection[] { WILDCARD, COMMON_IMAGES, COMMON_TEXTS };
+        DEF_COLLECTIONS = new MimeTypeCollection[] { WILDCARD, COMMON_TEXTS, COMMON_IMAGES, COMMON_AUDIO };
     }
 
     private String name;

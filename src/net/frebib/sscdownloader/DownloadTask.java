@@ -10,6 +10,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * A {@link Task} to download a file to a specified directory
+ * with progess and completion callbacks.
+ * Can be cancelled and paused
+ */
 public class DownloadTask extends Task<URL, DownloadTask> {
     private final int CHUNK_SIZE = 4096;
 
@@ -21,6 +26,12 @@ public class DownloadTask extends Task<URL, DownloadTask> {
     private long bytes;
     private float progress;
 
+    /**
+     * Creates a new DownloadTask
+     * @param url link to fetch the file from
+     * @param filename name of the file to save
+     * @param path location to save the file
+     */
     public DownloadTask(URL url, String filename, File path) {
         super(url);
 
@@ -111,44 +122,84 @@ public class DownloadTask extends Task<URL, DownloadTask> {
         notifyObservers(percent);
     }
 
+    /**
+     * Pauses the download. Can cause the download
+     * to fail if paused for too long
+     */
     public void pause() {
         if (dlState.getValue() > State.INITIALISED.getValue())
             dlState = State.PAUSED;
     }
 
+    /**
+     * Resumes a paused download
+     */
     public synchronized void resume() {
         if (dlState !=  State.PAUSED) return;
         dlState = State.DOWNLOADING;
         notifyAll();
     }
 
+    /**
+     * Cancels the download
+     */
     public void cancel() {
         DownloadClient.LOG.warning("Download cancelled: " + this.hashCode());
         setState(State.CANCELLED);
     }
 
+    /**
+     * Gets the amount of the file that is downloaded in bytes
+     */
     public long getBytes() {
         return bytes;
     }
+
+    /**
+     * Gets the length of the download in bytes
+     */
     public long getSize() {
         return size;
     }
+
+    /**
+     * Gets the progress of the download as a percentage
+     */
     public float getProgress() {
         return progress;
     }
+
+    /**
+     * Gets the state of the download
+     */
     public State getState() {
         return dlState;
     }
+
+    /**
+     * Gets the name of the file that is/will be saved
+     */
     public String getFilename() {
         return file.getName();
     }
+
+    /**
+     * Gets the full absolute path where the file is saved
+     */
     public String getFilepath() {
         return file.getAbsolutePath();
     }
+
+    /**
+     * Gets the {@link URL} from where the file is downloaded
+     */
     public URL getURL() {
         return url;
     }
 
+    /**
+     * Used to represent the exact state of a {@link DownloadTask}
+     */
     public enum State {
         UNINITIALISED(new Color(30, 80, 170), 1),
         INITIALISED(new Color(255, 255, 0), 2),
@@ -166,9 +217,17 @@ public class DownloadTask extends Task<URL, DownloadTask> {
             this.v = (short) val;
         }
 
+        /**
+         * Gets the numeric value of the State
+         */
         public short getValue() {
             return v;
         }
+
+        /**
+         * Gets the associated colour from the State
+         * @return the associated colour
+         */
         public Color getCol() {
             return col;
         }

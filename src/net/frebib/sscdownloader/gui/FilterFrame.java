@@ -10,6 +10,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * A JFrame window used to create and edit {@link MimeTypeCollection}s
+ */
 public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
     private final Color BG_COL, FG_COL, HL_BG_COL, HL_FG_COL;
     private final Border BORDER;
@@ -220,10 +223,17 @@ public class FilterFrame extends JDialog implements ListCellRenderer<MimeType> {
         }
     }
 
+    /**
+     * Gets the created {@link MimeTypeCollection} from the form
+     */
     public MimeTypeCollection getMimeTypes() {
         return new MimeTypeCollection(listModel.getList());
     }
 
+    /**
+     * Sets the initial {@link MimeTypeCollection} for when the form is loaded
+     * @param mimeTypes mimetypes to set as default
+     */
     public void setMimeTypes(MimeTypeCollection mimeTypes) {
         listModel.clear();
         listModel.addAll(mimeTypes.getMimes());

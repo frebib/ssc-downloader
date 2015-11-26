@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Represents a list of {@link DownloadTask} objects, used by JList to display download information
+ */
 public class DownloadListModel extends ArrayListModel<DownloadTask> implements Observer {
     private JList<DownloadTask> list;
     private int lastIndex;
@@ -14,9 +17,14 @@ public class DownloadListModel extends ArrayListModel<DownloadTask> implements O
         super();
     }
 
+    /**
+     * Links the JList. Used for scrolling
+     * to a Download when it is updated
+     */
     public void setList(JList<DownloadTask> list) {
         this.list=list;
     }
+
     @Override
     public void add(int index, DownloadTask dl) {
         if (dl == null || contains(dl)) return;

@@ -5,7 +5,16 @@ import net.frebib.sscdownloader.DownloadTask;
 import javax.swing.*;
 import java.awt.event.*;
 
+/**
+ * A GUI Jlist object that displays {@link DownloadTask} objects,
+ * their state and progress and updates when they change.
+ */
 public class DownloadList extends JList<DownloadTask> implements KeyListener {
+
+    /**
+     * Creates a new DownloadList supported by supplied ListModel
+     * @param model model to contain the task objects
+     */
     public DownloadList(ListModel<DownloadTask> model) {
         super(model);
 
@@ -51,7 +60,13 @@ public class DownloadList extends JList<DownloadTask> implements KeyListener {
         return menu;
     }
 
-    // Courtesy of  http://stackoverflow.com/questions/3758606/
+    /**
+     * Converts byte values into human-readable values
+     * Courtesy of  http://stackoverflow.com/questions/3758606/
+     * @param bytes amount of bytes to convert
+     * @param si sets the base of calculation between 1000 & 1024
+     * @return a formatted string representing the amount of bytes provided
+     */
     public static String humanReadableBytes(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) return bytes + " B";

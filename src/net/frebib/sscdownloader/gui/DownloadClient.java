@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+/**
+ * A File Downloader application for scanning webpages for links
+ * and downloading all the files/images according to user preferences
+ */
 public class DownloadClient extends JFrame implements Observer, MouseListener {
     public static final Log LOG = new Log(Level.FINEST)
             .setLogOutput(new SimpleDateFormat("'log/mailclient'yyyy-MM-dd hh-mm-ss'.log'")
@@ -292,6 +296,12 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
         fetch(webpage, dir);
     }
 
+    /**
+     * Asynchronously fetches a webpage and adds downloads to the queue for all
+     * links on the page, filtered according to the preferences set in the form.
+     * @param link webpage to scrape for links
+     * @param outputDir location to set file downloads to
+     */
     public void fetch(URL link, File outputDir) {
         setURL(link.toString());
 
@@ -322,6 +332,10 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
         }).start(link);
     }
 
+    /**
+     * Calculates all file extensions correctly using a
+     * {@link FileEvaluator} and sets the files to be downloaded
+     */
     public void evaluate() {
         // Create a FileEvaluator object and
         // define what to do when it completes
@@ -435,30 +449,56 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
         return (int) numThreads.getModel().getValue();
     }
 
+    /**
+     * Gets the {@link DownloadListModel} that stores the {@link DownloadTask}s
+     */
     public DownloadListModel getListModel() {
         return listModel;
     }
 
+    /**
+     * Increments the arbitrary count of downloads in the form
+     */
     public void incDownloadCount() {
         this.count++;
         updateStatus();
     }
+
+    /**
+     * Decrements the arbitrary count of downloads in the form
+     */
     public void decDownloadCount() {
         this.count--;
         updateStatus();
     }
 
+    /**
+     * Sets the {@link URL} in the input field on the form
+     */
     public void setURL(String url) {
         txtUrl.setText(url);
     }
+
+    /**
+     * Sets the arbitrary count of downloads in the form
+     */
     public void setDownloadCount(int count) {
         this.count = count;
         updateStatus();
     }
+
+    /**
+     * Changes the status of the form and updates
+     * @param status
+     */
     public void updateStatus(Status status) {
         this.status = status;
         updateStatus();
     }
+
+    /**
+     * Just updates the form according to the status
+     */
     public void updateStatus() {
         switch (this.status) {
             case UNINITIALIZED:
@@ -480,6 +520,9 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
         }
     }
 
+    /**
+     * Resets the form back to the initial state for re-use
+     */
     public void reset() {
         count = 0;
         updateStatus(Status.UNINITIALIZED);

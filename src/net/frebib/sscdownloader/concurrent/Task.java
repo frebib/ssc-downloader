@@ -14,6 +14,11 @@ public abstract class Task<T, R> extends Observable implements Callable<R>, Func
         this.t = t;
     }
 
+    /**
+     * Adds a {@link Completion} event to the worker Task
+     * @param done completion event handler to add
+     * @return the Task instance for function call chaining
+     */
     public Task<T, R> done(Completion<R> done) {
         this.done.add(done);
         return this;

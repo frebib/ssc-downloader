@@ -5,6 +5,9 @@ import net.frebib.sscdownloader.DownloadTask;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Renders a cell in the download list
+ */
 public class DownloadCellRenderer extends JPanel implements ListCellRenderer<DownloadTask> {
     private final Color BG_COL, FG_COL, HL_BG_COL, HL_FG_COL;
 
@@ -74,6 +77,11 @@ public class DownloadCellRenderer extends JPanel implements ListCellRenderer<Dow
         return this;
     }
 
+    /**
+     * Gets a {@link String} that represents the state of the download, as displayed on the progressbar
+     * @param task task to get the progress string for
+     * @return a nicely-formatted string
+     */
     private String getProgressText(DownloadTask task) {
         String progress = String.format("%.1f%%",task.getProgress());
         switch (task.getState()) {

@@ -295,7 +295,7 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
     public void fetch(URL link, File outputDir) {
         setURL(link.toString());
 
-        evaluate(link, outputDir);
+        evaluate();
 
         // Fetch links and parse them
         btnGo.setEnabled(false);
@@ -322,7 +322,7 @@ public class DownloadClient extends JFrame implements Observer, MouseListener {
         }).start(link);
     }
 
-    public void evaluate(URL link, File outputDir) {
+    public void evaluate() {
         // Create a FileEvaluator object and
         // define what to do when it completes
         final int threads = getThreadCount();

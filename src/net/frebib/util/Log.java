@@ -13,7 +13,7 @@ public class Log implements Thread.UncaughtExceptionHandler {
     private FileHandler fh;
 
     public Log(Level logLevel) {
-        logger = Logger.getLogger("mailclient");
+        logger = Logger.getLogger("downloader");
         logger.setLevel(logLevel);
     }
 
@@ -39,7 +39,7 @@ public class Log implements Thread.UncaughtExceptionHandler {
     }
 
     public void exit(int exitcode) {
-        info("MailClient exting with exitcode=" + exitcode);
+        info("Downloader exting with exitcode=" + exitcode);
         close();
     }
     public void close() {

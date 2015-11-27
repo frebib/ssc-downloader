@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 public class DownloadClient extends JFrame implements Observer, MouseListener {
     public static final Log LOG = new Log(Level.FINEST)
-            .setLogOutput(new SimpleDateFormat("'log/mailclient'yyyy-MM-dd hh-mm-ss'.log'")
+            .setLogOutput(new SimpleDateFormat("'log/downloader'yyyy-MM-dd hh-mm-ss'.log'")
                     .format(new Date()));
 
     private JPanel pnlMain, pnlTop, pnlButton;
